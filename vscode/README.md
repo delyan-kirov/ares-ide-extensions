@@ -15,9 +15,10 @@ The `thrax` executable must be on your `PATH`, or set `thrax.server.path`.
 
 ## Settings
 
-`thrax.lsp.*`, `thrax.format.*` and `thrax.lints.*` are the options of
-`thrax.toml` (`thrax config` documents them). A setting left unset defers to
-the file; a setting given overrides it. The server is started as
+`thrax.lsp.*`, `thrax.format.*` and `thrax.lints.*` are the options a
+project's `BUILD.thx` sets with `@option` (the Thrax language reference,
+section 11.4, documents them). A setting left unset defers to the project; a
+setting given overrides it. The server is started as
 `thrax.server.path [thrax.server.extraArgs] lsp`.
 
 Errors are ranked: the one that matters most in a file is an Error, errors

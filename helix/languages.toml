@@ -1,6 +1,6 @@
 # Thrax for Helix: merge into ~/.config/helix/languages.toml (or a project's
 # .helix/languages.toml). The `config` table is sent as the server's options;
-# its keys are the `[lsp]` keys of thrax.toml, which it overrides.
+# its keys are the `lsp` options a project's BUILD.thx sets, which it overrides.
 #
 # Highlighting needs the tree-sitter grammar, generated from the Bison spec:
 #   thxdo tree-sitter         # writes tools/editors/tree-sitter-thrax
@@ -21,7 +21,7 @@ focus = "roots"  # "all", "roots" or "one"
 name = "thrax"
 scope = "source.thrax"
 file-types = ["thx"]
-roots = ["thrax.toml"]
+roots = ["BUILD.thx"]
 comment-token = "#"
 indent = { tab-width = 4, unit = "    " }
 language-servers = ["thrax"]

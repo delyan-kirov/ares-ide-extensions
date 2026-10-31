@@ -1,6 +1,6 @@
 //! Thrax for Zed: starts `thrax lsp` and passes it the user's settings.
 //!
-//! In Zed's settings, `lsp.thrax.settings` holds the `thrax.toml` options to
+//! In Zed's settings, `lsp.thrax.settings` holds the project options to
 //! override, by section (`{ "lsp": { "focus": "one" } }`), and
 //! `lsp.thrax.binary` may name the executable and its arguments.
 

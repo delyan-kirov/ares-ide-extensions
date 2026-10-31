@@ -2,7 +2,7 @@
 --
 -- Install: put this file on your runtimepath as `lua/thrax.lua` (or copy it
 -- into your config) and call `require("thrax").setup()`. Options (all
--- optional) are the `[lsp]` keys of `thrax.toml`, which override the file:
+-- optional) are the `lsp` options a project's `BUILD.thx` sets, and override it:
 --
 --   require("thrax").setup({ settings = { lsp = { check = "save", focus = "one" } } })
 --
@@ -27,7 +27,7 @@ function M.setup(opts)
       vim.lsp.start({
         name = "thrax",
         cmd = opts.cmd or { "thrax", "lsp" },
-        root_dir = vim.fs.root(args.buf, { "thrax.toml", ".git" }) or vim.fn.getcwd(),
+        root_dir = vim.fs.root(args.buf, { "BUILD.thx", ".git" }) or vim.fn.getcwd(),
         init_options = opts.settings or {},
         settings = { thrax = opts.settings or {} },
       })

@@ -3,8 +3,8 @@
 const vscode = require("vscode");
 const { LanguageClient } = require("vscode-languageclient/node");
 
-// The `thrax.toml` options an editor may override, by section. The server owns
-// the table (`thrax config` lists it); these mirror package.json.
+// The project options an editor may override, by section. The server owns the
+// table (crates/utilities/src/config.rs); these mirror package.json.
 const OPTIONS = {
   lsp: ["check", "focus", "debounce_ms", "grace", "grace_ms", "max_diagnostics"],
   format: ["width", "indent"],
@@ -14,8 +14,8 @@ const OPTIONS = {
 let client;
 let output;
 
-// Only the options set here: an unset one is left to thrax.toml, which any
-// value sent would override.
+// Only the options set here: an unset one is left to the project's BUILD.thx,
+// which any value sent would override.
 function settings() {
   const config = vscode.workspace.getConfiguration("thrax");
   const out = {};
@@ -45,7 +45,7 @@ async function start() {
       initializationOptions: settings(),
       outputChannel: output,
       synchronize: {
-        fileEvents: vscode.workspace.createFileSystemWatcher("**/{*.thx,thrax.toml}"),
+        fileEvents: vscode.workspace.createFileSystemWatcher("**/*.thx"),
       },
     },
   );
