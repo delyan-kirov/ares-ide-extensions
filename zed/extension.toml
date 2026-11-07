@@ -15,5 +15,5 @@ languages = ["Thrax"]
 # `rev` at that commit.
 [grammars.thrax]
 repository = "https://github.com/delyan-kirov/thrax-ide-extensions"
-rev = "e5b90f0a9d33f4610c83a3d6ae8c533930579713"
+rev = "524fd4f5b442cf92e3e31d482dfbd233e4005b48"
 path = "tree-sitter-thrax"
