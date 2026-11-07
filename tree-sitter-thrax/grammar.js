@@ -225,6 +225,7 @@ module.exports = grammar({
       $.uident,
       $.at_tycon,
       seq($.eff_entry, $.type_atom),
+      seq('@e', '(', $.expr, ')'),
     ),
     expr: $ => choice(
       $.ctrl_expr,
@@ -234,29 +235,12 @@ module.exports = grammar({
       prec.left(3, seq($.op_expr, '|>', $.ctrl_expr)),
     ),
     ctrl_expr: $ => choice(
-      prec.right(seq('let', $.let_bindings, optional($.opt_comma), 'in', $.expr)),
-      prec.right(seq('with', $.with_subjects, optional($.opt_comma), 'in', $.expr)),
-      prec.right(seq('if', $.if_arms, optional($.opt_comma), 'else', $.expr)),
+      prec.right(seq('let', $.let_binder, '=', $.expr, 'in', $.expr)),
+      prec.right(seq('with', $.expr, 'in', $.expr)),
+      prec.right(seq('if', $.expr, '=>', $.expr, 'else', $.expr)),
       prec.right(seq('\\', $.params, '=>', $.expr)),
       prec.right(seq('\\', $.arms)),
-      prec.right(seq('defer', $.defer_cleanups, optional($.opt_comma), 'in', $.expr)),
       prec.right($.handle),
-    ),
-    if_arms: $ => choice(
-      seq($.expr, '=>', $.expr),
-      seq($.if_arms, ',', $.expr, '=>', $.expr),
-    ),
-    with_subjects: $ => choice(
-      $.expr,
-      seq($.with_subjects, ',', $.expr),
-    ),
-    defer_cleanups: $ => choice(
-      $.op_expr,
-      seq($.defer_cleanups, ',', $.op_expr),
-    ),
-    let_bindings: $ => choice(
-      seq($.let_binder, '=', $.expr),
-      seq($.let_bindings, ',', $.let_binder, '=', $.expr),
     ),
     let_binder: $ => choice(
       seq($.lident, optional($.opt_sig)),
@@ -445,6 +429,7 @@ module.exports = grammar({
       prec.left(15, seq($.uident, '.', '{', optional($.field_pats), '}')),
       prec.left(15, seq($.uident, '.', $.uident, optional($.pat_payload))),
       prec.left(15, seq($.uident, '.', $.uident, '.', $.uident, optional($.pat_payload))),
+      seq('@e', '(', $.expr, ')'),
     ),
     pat_payload: $ => prec.left(15, seq('.', '{', optional($.field_pats), '}')),
     rec_pats: $ => choice(

@@ -208,7 +208,7 @@
           "name": "keyword.control.conditional.thrax"
         },
         {
-          "match": "\\b(let|in|with|do|ctl|defer)\\b",
+          "match": "\\b(let|in|with|do|ctl)\\b",
           "name": "keyword.control.thrax"
         }
       ]

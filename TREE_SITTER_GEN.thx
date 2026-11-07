@@ -78,7 +78,6 @@ $ tokens : @Vec { @Str, @Str } =
         { "KW_WITH", "'with'" },
         { "KW_DO", "'do'" },
         { "KW_CTL", "'ctl'" },
-        { "KW_DEFER", "'defer'" },
         { "SEMI", "';'" },
         { "PIPE_BACK", "'<|'" },
         { "PIPE_FWD", "'|>'" },
@@ -188,7 +187,9 @@ $ read_header : @Vec @Str -> Header = \toks =>
     (VEC.foldl header_step { "", 0, Header.{ .terms = [], .precs = [] } } toks).2
 
 $ header_step : { @Str, @Int, Header } -> @Str -> { @Str, @Int, Header } = \st tok =>
-    let dir = st.0, level = st.1, h = st.2 in
+    let dir = st.0 in
+    let level = st.1 in
+    let h = st.2 in
     if STR.starts_with tok "%" =>
         let assoc = tok |> \
             | "%left" => "left"

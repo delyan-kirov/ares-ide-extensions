@@ -282,10 +282,6 @@
           "named": true
         },
         {
-          "type": "defer_cleanups",
-          "named": true
-        },
-        {
           "type": "expr",
           "named": true
         },
@@ -294,42 +290,11 @@
           "named": true
         },
         {
-          "type": "if_arms",
-          "named": true
-        },
-        {
-          "type": "let_bindings",
-          "named": true
-        },
-        {
-          "type": "opt_comma",
+          "type": "let_binder",
           "named": true
         },
         {
           "type": "params",
-          "named": true
-        },
-        {
-          "type": "with_subjects",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "defer_cleanups",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "defer_cleanups",
-          "named": true
-        },
-        {
-          "type": "op_expr",
           "named": true
         }
       ]
@@ -391,6 +356,10 @@
         },
         {
           "type": "eff_entry",
+          "named": true
+        },
+        {
+          "type": "expr",
           "named": true
         },
         {
@@ -827,25 +796,6 @@
     }
   },
   {
-    "type": "if_arms",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expr",
-          "named": true
-        },
-        {
-          "type": "if_arms",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "import",
     "named": true,
     "fields": {},
@@ -970,29 +920,6 @@
         },
         {
           "type": "uident",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "let_bindings",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expr",
-          "named": true
-        },
-        {
-          "type": "let_binder",
-          "named": true
-        },
-        {
-          "type": "let_bindings",
           "named": true
         }
       ]
@@ -1221,6 +1148,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "expr",
+          "named": true
+        },
         {
           "type": "field_pats",
           "named": true
@@ -2034,25 +1965,6 @@
     }
   },
   {
-    "type": "with_subjects",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expr",
-          "named": true
-        },
-        {
-          "type": "with_subjects",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "!",
     "named": false
   },
@@ -2279,10 +2191,6 @@
   },
   {
     "type": "ctl",
-    "named": false
-  },
-  {
-    "type": "defer",
     "named": false
   },
   {
