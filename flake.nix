@@ -35,6 +35,29 @@
         exec ${pkgs.zed-editor}/bin/zeditor "$@"
       '';
 
+      # `nix run path:tools/editors#zed-build -- DIR`: builds what installing
+      # DIR/zed as a dev extension would, in place, so Zed loads it on restart.
+      # The grammar is compiled from DIR/tree-sitter-thrax as it is on disk (Zed
+      # would fetch `rev`), with the wasi-sdk Zed downloaded when there is one.
+      zedBuild = pkgs.writeShellScriptBin "zed-build" ''
+        set -eu
+        dir=''${1:-$PWD}
+        export PATH=${rust}/bin:${pkgs.tree-sitter}/bin:$PATH
+        export NIX_LD_LIBRARY_PATH=${wasiSdkLibs}''${NIX_LD_LIBRARY_PATH:+:$NIX_LD_LIBRARY_PATH}
+        cd "$dir/zed"
+        cargo build --quiet --release --target wasm32-wasip2
+        cp target/wasm32-wasip2/release/zed_thrax.wasm extension.wasm
+        mkdir -p grammars
+        src=../tree-sitter-thrax/src
+        clang=''${XDG_DATA_HOME:-$HOME/.local/share}/zed/extensions/build/wasi-sdk/bin/clang
+        if [ -x "$clang" ]; then
+          "$clang" -fPIC -shared -Os -Wl,--export=tree_sitter_thrax \
+            -o grammars/thrax.wasm -I "$src" "$src/parser.c"
+        else
+          tree-sitter build --wasm -o grammars/thrax.wasm ../tree-sitter-thrax
+        fi
+      '';
+
       # VS Code is unfree in nixpkgs, so this uses the `code` on PATH.
       vscode = pkgs.writeShellScriptBin "vscode-thrax" ''
         dir=''${THRAX_EDITORS:-$PWD}/vscode
@@ -48,6 +71,8 @@
     {
       # `nix run path:tools/editors#zed`: Zed, able to install tools/editors/zed
       # as a dev extension (`zed: install dev extension`).
+      # `nix run path:tools/editors#zed-build -- tools/editors`: builds that dev
+      # extension in place (`thxdo zed-update` runs it).
       # `nix run path:tools/editors#vscode`: VS Code with tools/editors/vscode
       # loaded unpacked; run from the Thrax root or tools/editors, or set
       # THRAX_EDITORS to tools/editors.
@@ -55,6 +80,10 @@
         zed = {
           type = "app";
           program = "${zed}/bin/zed-thrax";
+        };
+        zed-build = {
+          type = "app";
+          program = "${zedBuild}/bin/zed-build";
         };
         vscode = {
           type = "app";

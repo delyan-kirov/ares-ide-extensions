@@ -1,0 +1,12 @@
+#!/bin/sh
+# The hooks of this repository as the Thrax checkout's tools/editors: each is
+# `run <hook>`, which runs `thxdo hook editors-<hook>` from the Thrax root (the
+# logic is in tools/HOOKS.thx). Installed by `thxdo hooks` there.
+root=$(git rev-parse --show-superproject-working-tree) && [ -n "$root" ] || exit 0
+thxdo=$(command -v thxdo) || {
+    echo "thxdo: not on PATH (outside the nix shell?), $1 hook skipped" >&2
+    exit 0
+}
+# git points these at this repository; the Thrax root is another one.
+unset $(git rev-parse --local-env-vars)
+cd "$root" && THXDO_BIN=$thxdo exec "$thxdo" hook "editors-$1"
