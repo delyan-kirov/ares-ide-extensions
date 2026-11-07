@@ -43,9 +43,9 @@
 (atom (at_tycon) @function)
 
 ["let" "in" "with" "defer"] @keyword
-["if" "else" "is"] @keyword
+["if" "else"] @keyword
 ["do" "ctl"] @keyword
-["@mod" "@struct" "@union" "@alias" "@effect" "@main" "@build" "@e" "@run" "@ctx" "@private" "@extern" "@Array"] @keyword
+["@mod" "@struct" "@union" "@alias" "@effect" "@main" "@build" "@e" "@run" "@use" "@private" "@extern" "@Array"] @keyword
 "$" @punctuation.special
 
 ["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "&&" "||" "!" "..." "<>" "\\"] @operator
