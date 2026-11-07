@@ -217,21 +217,27 @@ $ after_eq : List Tok -> List Tok = \ts =>
 
 # A member is a name followed by `:` at the top level of the body, first or
 # after a comma.
-$ members : List Tok -> @Int -> @Bool -> @Str -> @Str -> St -> St = \ts depth expect kind owner st =>
+$ members : List Tok -> @Int -> @Bool -> @Str -> @Str -> St
+    -> St = \ts depth expect kind owner st =>
     ts |> \
-    | List.Cons.{ t, rest } if !t.item =>
-        let s = t.text, next = \d e st2 => members rest d e kind owner st2 in
-        if s == "(" || s == "\{" || s == "[" => next (depth + 1) @false st
-        else if s == ")" || s == "}" || s == "]" => next (depth - 1) @false st
-        else if depth == 0 && s == "," => next 0 @true st
-        else if depth == 0
-            && expect
-            && s != "with"
-            && STR.is_alpha (@array_get s 0)
-            && peek rest 0 == ":" =>
-            next 0 @false (tag st s t (member_kind kind) (scope_name kind ++ ":" ++ owner))
-        else next depth @false st
-    | _ => st
+        | List.Cons.{ t, rest } if !t.item =>
+            let s = t.text in
+            let next = \d e st2 => members rest d e kind owner st2 in
+            if s == "(" || s == "\{" || s == "[" =>
+                next (depth + 1) @false st
+            else if s == ")" || s == "}" || s == "]" =>
+                next (depth - 1) @false st
+            else if depth == 0 && s == "," =>
+                next 0 @true st
+            else if depth == 0
+                && expect
+                && s != "with"
+                && STR.is_alpha (@array_get s 0)
+                && peek rest 0 == ":" =>
+                next 0 @false (tag st s t (member_kind kind) (scope_name kind ++ ":" ++ owner))
+            else
+                next depth @false st
+        | _ => st
 
 # ---- writing ----------------------------------------------------------------
 

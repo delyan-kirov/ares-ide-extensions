@@ -234,29 +234,13 @@ module.exports = grammar({
       prec.left(3, seq($.op_expr, '|>', $.ctrl_expr)),
     ),
     ctrl_expr: $ => choice(
-      prec.right(seq('let', $.let_bindings, optional($.opt_comma), 'in', $.expr)),
-      prec.right(seq('with', $.with_subjects, optional($.opt_comma), 'in', $.expr)),
-      prec.right(seq('if', $.if_arms, optional($.opt_comma), 'else', $.expr)),
+      prec.right(seq('let', $.let_binder, '=', $.expr, 'in', $.expr)),
+      prec.right(seq('with', $.expr, 'in', $.expr)),
+      prec.right(seq('if', $.expr, '=>', $.expr, 'else', $.expr)),
       prec.right(seq('\\', $.params, '=>', $.expr)),
       prec.right(seq('\\', $.arms)),
-      prec.right(seq('defer', $.defer_cleanups, optional($.opt_comma), 'in', $.expr)),
+      prec.right(seq('defer', $.op_expr, 'in', $.expr)),
       prec.right($.handle),
-    ),
-    if_arms: $ => choice(
-      seq($.expr, '=>', $.expr),
-      seq($.if_arms, ',', $.expr, '=>', $.expr),
-    ),
-    with_subjects: $ => choice(
-      $.expr,
-      seq($.with_subjects, ',', $.expr),
-    ),
-    defer_cleanups: $ => choice(
-      $.op_expr,
-      seq($.defer_cleanups, ',', $.op_expr),
-    ),
-    let_bindings: $ => choice(
-      seq($.let_binder, '=', $.expr),
-      seq($.let_bindings, ',', $.let_binder, '=', $.expr),
     ),
     let_binder: $ => choice(
       seq($.lident, optional($.opt_sig)),
