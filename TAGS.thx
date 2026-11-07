@@ -39,15 +39,15 @@ $ Tag : @struct = name: @Str, line: @Int, text: @Str, kind: @Str, scope: @Str, p
 # ---- scanning ---------------------------------------------------------------
 
 # The byte at `i`, or 0 past the end.
-$ byte : @Str -> @Int -> @Int = \s i = if i < @array_len s => @array_get s i else 0
+$ byte : @Str -> @Int -> @Int = \s i => if i < @array_len s => @array_get s i else 0
 
-$ is_word_start : @Int -> @Bool = \c = STR.is_alpha c || c == 95 || c == 64
+$ is_word_start : @Int -> @Bool = \c => STR.is_alpha c || c == 95 || c == 64
 
-$ is_word : @Int -> @Bool = \c = STR.is_alnum c || c == 95
+$ is_word : @Int -> @Bool = \c => STR.is_alnum c || c == 95
 
 # The operator characters of crates/frontend/src/lexer/data.rs: a run of them
 # is one token, so `::` is never mistaken for `:`.
-$ is_op : @Int -> @Bool = \c =
+$ is_op : @Int -> @Bool = \c =>
     c == 33
         || c == 36
         || c == 37
@@ -66,14 +66,14 @@ $ is_op : @Int -> @Bool = \c =
         || c == 126
         || c == 92
 
-$ run_end : (@Int -> @Bool) -> @Str -> @Int -> @Int = \p s i =
+$ run_end : (@Int -> @Bool) -> @Str -> @Int -> @Int = \p s i =>
     if i < @array_len s && p (@array_get s i) => run_end p s (i + 1) else i
 
 # A `#- ... -#` block comment nests. `Pos` is an offset, its line and where
 # that line starts.
 $ Pos : @struct = at: @Int, line: @Int, bol: @Int,
 
-$ block_end : @Str -> Pos -> @Int -> Pos = \s p depth =
+$ block_end : @Str -> Pos -> @Int -> Pos = \s p depth =>
     let i = p.at in
     if depth == 0 || i >= @array_len s => p
     else
@@ -87,7 +87,7 @@ $ block_end : @Str -> Pos -> @Int -> Pos = \s p depth =
 
 # Past a string literal, as the lexer reads one: one line, `\` escapes in the
 # text, and a `?( ... )` interpolant may hold strings of its own.
-$ string_end : @Str -> @Int -> @Int -> @Int = \s i depth =
+$ string_end : @Str -> @Int -> @Int -> @Int = \s i depth =>
     if i >= @array_len s || @array_get s i == 10 => i
     else
         let c = @array_get s i in
@@ -101,15 +101,15 @@ $ string_end : @Str -> @Int -> @Int -> @Int = \s i depth =
         else if c == 34 => string_end s (nested_end s (i + 1)) depth
         else string_end s (i + 1) depth
 
-$ nested_end : @Str -> @Int -> @Int = \s i =
+$ nested_end : @Str -> @Int -> @Int = \s i =>
     if i >= @array_len s || @array_get s i == 10 => i
     else if @array_get s i == 92 => nested_end s (i + 2)
     else if @array_get s i == 34 => i + 1
     else nested_end s (i + 1)
 
-$ lex : @Str -> List Tok = \s = LIST.reverse (lex_from s 0 1 0 List.Nil)
+$ lex : @Str -> List Tok = \s => LIST.reverse (lex_from s 0 1 0 List.Nil)
 
-$ lex_from : @Str -> @Int -> @Int -> @Int -> List Tok -> List Tok = \s i line bol acc =
+$ lex_from : @Str -> @Int -> @Int -> @Int -> List Tok -> List Tok = \s i line bol acc =>
     if i >= @array_len s => acc
     else
         let c = @array_get s i in
@@ -118,50 +118,50 @@ $ lex_from : @Str -> @Int -> @Int -> @Int -> List Tok -> List Tok = \s i line bo
         else if c == 35 && byte s (i + 1) == 45 =>
             let e = block_end s Pos.{ .at = i + 2, .line = line, .bol = bol } 1 in
             lex_from s e.at e.line e.bol acc
-        else if c == 35 => lex_from s (run_end (\b = b != 10) s i) line bol acc
+        else if c == 35 => lex_from s (run_end (\b => b != 10) s i) line bol acc
         else if c == 34 => lex_from s (string_end s (i + 1) 0) line bol acc
         else if is_word_start c => emit s i (run_end is_word s (i + 1)) line bol acc
         else if is_op c => emit s i (run_end is_op s (i + 1)) line bol acc
         else emit s i (i + 1) line bol acc
 
-$ emit : @Str -> @Int -> @Int -> @Int -> @Int -> List Tok -> List Tok = \s i j line bol acc =
+$ emit : @Str -> @Int -> @Int -> @Int -> @Int -> List Tok -> List Tok = \s i j line bol acc =>
     lex_from s j line bol (token s i j line bol :: acc)
 
-$ token : @Str -> @Int -> @Int -> @Int -> @Int -> Tok = \s i j line bol =
+$ token : @Str -> @Int -> @Int -> @Int -> @Int -> Tok = \s i j line bol =>
     let text = STR.substr s i j in
     Tok.{ .text = text, .line = line, .bol = bol, .item = text == "$" && i == bol }
 
 # ---- items ------------------------------------------------------------------
 
 # The text of the `k`th token of the current item, or "" past its end.
-$ peek : List Tok -> @Int -> @Str = \ts k =
-    is ts | List.Cons.{ t, rest } if !t.item => if k == 0 => t.text else peek rest (k - 1) | _ => ""
+$ peek : List Tok -> @Int -> @Str = \ts k =>
+    ts |> \ | List.Cons.{ t, rest } if !t.item => if k == 0 => t.text else peek rest (k - 1) | _ => ""
 
-$ drop : @Int -> List Tok -> List Tok = \k ts =
-    is ts | List.Cons.{ t, rest } if k > 0 => drop (k - 1) rest | _ => ts
+$ drop : @Int -> List Tok -> List Tok = \k ts =>
+    ts |> \ | List.Cons.{ t, rest } if k > 0 => drop (k - 1) rest | _ => ts
 
-$ is_lower_name : @Str -> @Bool = \s =
+$ is_lower_name : @Str -> @Bool = \s =>
     !(STR.is_empty s) && (STR.is_lower (@array_get s 0) || @array_get s 0 == 95)
 
-$ is_upper_name : @Str -> @Bool = \s = !(STR.is_empty s) && STR.is_upper (@array_get s 0)
+$ is_upper_name : @Str -> @Bool = \s => !(STR.is_empty s) && STR.is_upper (@array_get s 0)
 
-$ type_kind : @Str -> @Str = \d =
-    is d
+$ type_kind : @Str -> @Str = \d =>
+    d |> \
     | "@struct" => "s"
     | "@union" => "u"
     | "@alias" => "t"
     | "@effect" => "e"
     | _ => ""
 
-$ member_kind : @Str -> @Str = \k =
-    is k
+$ member_kind : @Str -> @Str = \k =>
+    k |> \
     | "s" => "m"
     | "u" => "c"
     | "e" => "o"
     | _ => ""
 
-$ scope_name : @Str -> @Str = \k =
-    is k
+$ scope_name : @Str -> @Str = \k =>
+    k |> \
     | "s" => "struct"
     | "u" => "union"
     | _ => "effect"
@@ -169,9 +169,9 @@ $ scope_name : @Str -> @Str = \k =
 $ St : @struct = src: @Str, module: @Str, private: @Bool, tags: List Tag,
 
 # The source line a token is on.
-$ line_text : @Str -> Tok -> @Str = \s t = STR.substr s t.bol (run_end (\b = b != 10) s t.bol)
+$ line_text : @Str -> Tok -> @Str = \s t => STR.substr s t.bol (run_end (\b => b != 10) s t.bol)
 
-$ tag : St -> @Str -> Tok -> @Str -> @Str -> St = \st name at kind scope =
+$ tag : St -> @Str -> Tok -> @Str -> @Str -> St = \st name at kind scope =>
     let t = Tag.{
             .name = name,
             .line = at.line,
@@ -182,14 +182,14 @@ $ tag : St -> @Str -> Tok -> @Str -> @Str -> St = \st name at kind scope =
         } in
     St.{ .src = st.src, .module = st.module, .private = st.private, .tags = t :: st.tags }
 
-$ items : List Tok -> St -> St = \ts st =
-    is ts
+$ items : List Tok -> St -> St = \ts st =>
+    ts |> \
     | List.Cons.{ t, rest } if t.item => items rest (item t rest st)
     | List.Cons.{ t, rest } => items rest st
     | _ => st
 
 # The item that `dollar` begins, with `ts` the tokens after it.
-$ item : Tok -> List Tok -> St -> St = \dollar ts st =
+$ item : Tok -> List Tok -> St -> St = \dollar ts st =>
     let head = peek ts 0 in
     if head == "@mod" =>
         let name = peek ts 1 in
@@ -209,18 +209,18 @@ $ item : Tok -> List Tok -> St -> St = \dollar ts st =
         if kind == "t" => typed else members (after_eq (drop 3 ts)) 0 @true kind head typed
     else st
 
-$ operator : List Tok -> @Str -> @Str = \ts acc =
+$ operator : List Tok -> @Str -> @Str = \ts acc =>
     let s = peek ts 0 in if s == ")" || s == "" => acc else operator (drop 1 ts) (acc ++ s)
 
-$ after_eq : List Tok -> List Tok = \ts =
+$ after_eq : List Tok -> List Tok = \ts =>
     let s = peek ts 0 in if s == "" => ts else if s == "=" => drop 1 ts else after_eq (drop 1 ts)
 
 # A member is a name followed by `:` at the top level of the body, first or
 # after a comma.
-$ members : List Tok -> @Int -> @Bool -> @Str -> @Str -> St -> St = \ts depth expect kind owner st =
-    is ts
+$ members : List Tok -> @Int -> @Bool -> @Str -> @Str -> St -> St = \ts depth expect kind owner st =>
+    ts |> \
     | List.Cons.{ t, rest } if !t.item =>
-        let s = t.text, next = \d e st2 = members rest d e kind owner st2 in
+        let s = t.text, next = \d e st2 => members rest d e kind owner st2 in
         if s == "(" || s == "\{" || s == "[" => next (depth + 1) @false st
         else if s == ")" || s == "}" || s == "]" => next (depth - 1) @false st
         else if depth == 0 && s == "," => next 0 @true st
@@ -236,10 +236,10 @@ $ members : List Tok -> @Int -> @Bool -> @Str -> @Str -> St -> St = \ts depth ex
 # ---- writing ----------------------------------------------------------------
 
 # A tags pattern is the whole line, with only `\` and `/` escaped.
-$ pattern : @Str -> @Str = \line =
+$ pattern : @Str -> @Str = \line =>
     "/^" ++ STR.replace (STR.replace line "\\" "\\\\") "/" "\\/" ++ "$/"
 
-$ entry : @Str -> @Str -> @Str -> Tag -> @Str = \file pat name t =
+$ entry : @Str -> @Str -> @Str -> Tag -> @Str = \file pat name t =>
     name
         ++ "\t"
         ++ file
@@ -254,16 +254,16 @@ $ entry : @Str -> @Str -> @Str -> Tag -> @Str = \file pat name t =
 
 # The tag under its own name, and qualified by its type (a member) or its
 # module (a public item).
-$ entries : @Str -> @Str -> List @Str -> Tag -> List @Str = \file module acc t =
+$ entries : @Str -> @Str -> List @Str -> Tag -> List @Str = \file module acc t =>
     let pat = pattern (STR.replace t.text "\r" "") in
     let plain = entry file pat t.name t in
-    let owner = is STR.find t.scope ":"
+    let owner = STR.find t.scope ":" |> \
         | Option.Some.{ c } => STR.substr t.scope (c + 1) (@array_len t.scope)
         | _ => if t.private || t.kind == "n" || module == "" => "" else module in
     if owner == "" => plain :: acc else entry file pat (owner ++ "." ++ t.name) t :: plain :: acc
 
-$ file_entries : List @Str -> @Str -> <@IO> List @Str = \acc file =
-    is IO.read_file file
+$ file_entries : List @Str -> @Str -> <@IO> List @Str = \acc file =>
+    IO.read_file file |> \
     | Option.Some.{ src } =>
         let st = items (
                 lex src
@@ -272,20 +272,20 @@ $ file_entries : List @Str -> @Str -> <@IO> List @Str = \acc file =
     | _ => IO.eprintln ("TAGS: cannot read " ++ file); acc
 
 # Byte-wise, as Vim's binary search over a sorted tags file expects.
-$ sort : List @Str -> List @Str = \xs =
-    is xs
+$ sort : List @Str -> List @Str = \xs =>
+    xs |> \
     | List.Cons.{ a, List.Cons.{ b, rest } } =>
         let halves = split xs List.Nil List.Nil in merge (sort halves.0) (sort halves.1) List.Nil
     | _ => xs
 
-$ split : List @Str -> List @Str -> List @Str -> { List @Str, List @Str } = \xs l r =
-    is xs | List.Cons.{ x, rest } => split rest r (x :: l) | _ => { l, r }
+$ split : List @Str -> List @Str -> List @Str -> { List @Str, List @Str } = \xs l r =>
+    xs |> \ | List.Cons.{ x, rest } => split rest r (x :: l) | _ => { l, r }
 
-$ merge : List @Str -> List @Str -> List @Str -> List @Str = \xs ys acc =
-    is xs
+$ merge : List @Str -> List @Str -> List @Str -> List @Str = \xs ys acc =>
+    xs |> \
     | List.Cons.{ x, xr } =>
         (
-            is ys
+            ys |> \
             | List.Cons.{ y, yr } => if y < x => merge xs yr (y :: acc) else merge xr ys (x :: acc)
             | _ => LIST.reverse_onto xs acc
         )
@@ -293,56 +293,56 @@ $ merge : List @Str -> List @Str -> List @Str -> List @Str = \xs ys acc =
 
 # ---- files ------------------------------------------------------------------
 
-$ sh_quote : @Str -> @Str = \s = "'" ++ STR.replace s "'" "'\\''" ++ "'"
+$ sh_quote : @Str -> @Str = \s => "'" ++ STR.replace s "'" "'\\''" ++ "'"
 
-$ find_cmd : @Str -> @Str = \dir =
+$ find_cmd : @Str -> @Str = \dir =>
     "find "
         ++ sh_quote dir
         ++ " \\( -name .git -o -name target -o -name thrax-out -o -name node_modules \\) -prune"
         ++ " -o -type f -name '*.thx' -print"
 
 # The lines a stream gives, as they come.
-$ read_lines : @Int -> @Str -> List @Str -> <@IO> List @Str = \f line acc =
+$ read_lines : @Int -> @Str -> List @Str -> <@IO> List @Str = \f line acc =>
     let c = C.fgetc f in
     if c == 10 => read_lines f "" (if STR.is_empty line => acc else line :: acc)
     else if c >= 0 && c <= 255 => read_lines f (@array_push line c) acc
     else if STR.is_empty line => acc
     else line :: acc
 
-$ drop_dot : @Str -> @Str = \p = if STR.starts_with p "./" => STR.substr p 2 (@array_len p) else p
+$ drop_dot : @Str -> @Str = \p => if STR.starts_with p "./" => STR.substr p 2 (@array_len p) else p
 
-$ sources : List @Str -> @Str -> <@IO> List @Str = \acc path =
+$ sources : List @Str -> @Str -> <@IO> List @Str = \acc path =>
     if STR.ends_with path ".thx" => path :: acc
     else
         let f = C.popen { find_cmd path, "r" } in
         if f == 0 => acc
         else
             let found = read_lines f "" List.Nil in
-            C.pclose f; LIST.foldl (\a p = drop_dot p :: a) acc found
+            C.pclose f; LIST.foldl (\a p => drop_dot p :: a) acc found
 
 $ header : @Str =
     "!_TAG_FILE_FORMAT\t2\t/extended format/\n"
         ++ "!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted, 2=foldcase/\n"
         ++ "!_TAG_PROGRAM_NAME\tthrax TAGS.thx\t//\n"
 
-$ fold_io : (a -> b -> <@IO> a) -> a -> List b -> <@IO> a = \f acc xs =
-    is xs | List.Cons.{ x, rest } => fold_io f (f acc x) rest | _ => acc
+$ fold_io : (a -> b -> <@IO> a) -> a -> List b -> <@IO> a = \f acc xs =>
+    xs |> \ | List.Cons.{ x, rest } => fold_io f (f acc x) rest | _ => acc
 
-$ write_lines : @Int -> List @Str -> <@IO> {} = \f xs =
-    is xs
+$ write_lines : @Int -> List @Str -> <@IO> {} = \f xs =>
+    xs |> \
     | List.Cons.{ x, rest } =>
         let l = x ++ "\n" in C.fwrite { l, 1, @array_len l, f }; write_lines f rest
     | _ => {}
 
 $ Opts : @struct = out: @Str, paths: List @Str,
 
-$ parse_args : @Vec @Str -> @Int -> Opts -> Opts = \args i o =
+$ parse_args : @Vec @Str -> @Int -> Opts -> Opts = \args i o =>
     if i >= @vec_len args => o
     else if @vec_get args i == "-o" && i + 1 < @vec_len args =>
         parse_args args (i + 2) Opts.{ .out = @vec_get args (i + 1), .paths = o.paths }
     else parse_args args (i + 1) Opts.{ .out = o.out, .paths = @vec_get args i :: o.paths }
 
-$ @main : @Vec @Str -> <@IO> @Int = \args =
+$ @main : @Vec @Str -> <@IO> @Int = \args =>
     let o = parse_args args 1 Opts.{ .out = "tags", .paths = List.Nil } in
     let paths = if LIST.is_empty o.paths => "." :: List.Nil else LIST.reverse o.paths in
     let files = fold_io sources List.Nil paths in
