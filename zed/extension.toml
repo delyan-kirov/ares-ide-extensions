@@ -15,5 +15,5 @@ languages = ["Ares"]
 # `rev` at that commit.
 [grammars.ares]
 repository = "https://github.com/delyan-kirov/ares-ide-extensions"
-rev = "077f2cf7ea474063a24b323589194fa546de016e"
+rev = "319cb1e3de5efa4174b5ce052c7e2321b3208028"
 path = "tree-sitter-ares"
