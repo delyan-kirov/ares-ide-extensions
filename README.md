@@ -32,8 +32,7 @@ itself).
 `hooks/` are this repository's git hooks (`thrax hooks` in the Ares root
 installs them). pre-commit checks the highlight queries when the grammar or a
 query is staged. post-commit, after a commit that changes the grammar, pins Zed
-to it, leaving `zed/extension.toml` for the next commit (a commit cannot name
-itself). It and post-checkout and post-merge rebuild what an installed Zed or
+to it in a commit of its own (a commit cannot name itself). It and post-checkout and post-merge rebuild what an installed Zed or
 Helix uses when it is older than its sources; the Ares root's hooks do the
 same, and its pre-commit refuses a `tools/editors` whose `rev` lags the grammar.
 

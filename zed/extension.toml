@@ -11,8 +11,8 @@ name = "Ares"
 languages = ["Ares"]
 
 # Zed fetches the grammar with git at `rev` and compiles `path`/src/parser.c:
-# after regenerating the grammar (`thrax tree-sitter`) and committing it, point
-# `rev` at that commit.
+# the post-commit hook points `rev` at each commit that changes the grammar, in
+# a commit of its own.
 [grammars.ares]
 repository = "https://github.com/delyan-kirov/ares-ide-extensions"
 rev = "319cb1e3de5efa4174b5ce052c7e2321b3208028"
