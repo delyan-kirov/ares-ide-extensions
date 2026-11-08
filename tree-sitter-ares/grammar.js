@@ -21,7 +21,7 @@ module.exports = grammar({
       seq('$', $.uident, ':', '@alias', optional($.opt_type_params), '=', $.type),
       seq('$', $.uident, ':', '@alias', optional($.opt_type_params), '=', $.eff_row),
       seq('$', $.uident, ':', '@effect', optional($.opt_type_params), '=', $.effect_body),
-      seq('$', 'with', $.import, optional($.opt_comma)),
+      seq('$', '@import', $.import),
       seq('$', '@private'),
       seq('$', '@main', ':', $.type, '=', $.expr),
       seq('$', '@build', ':', $.type, '=', $.expr),
@@ -68,10 +68,6 @@ module.exports = grammar({
       prec.right(12, '<|>'),
     ),
     import: $ => choice(
-      $.import_entry,
-      seq($.import, ',', $.import_entry),
-    ),
-    import_entry: $ => choice(
       $.dotted_name,
       seq($.any_name, '=', $.dotted_name),
     ),
@@ -91,7 +87,7 @@ module.exports = grammar({
     ),
     field_decl: $ => choice(
       seq($.lident, ':', $.type),
-      seq('with', $.type_app_head),
+      $.entry_splice,
     ),
     union_body: $ => seq($.variant_decls, optional($.opt_comma)),
     variant_decls: $ => choice(
@@ -100,7 +96,11 @@ module.exports = grammar({
     ),
     variant_decl: $ => choice(
       seq($.uident, ':', $.payload_decl),
-      seq('with', $.type_app_head),
+      $.entry_splice,
+    ),
+    entry_splice: $ => choice(
+      seq('@e', $.expr),
+      prec.right(2, seq('@e', '<|', $.expr)),
     ),
     payload_decl: $ => choice(
       seq('{', '}'),
@@ -206,10 +206,7 @@ module.exports = grammar({
       $.rec_field,
       seq($.rec_field_list, ',', $.rec_field),
     ),
-    rec_field: $ => choice(
-      seq($.lident, ':', $.type),
-      seq('with', $.lident, ':', $.type),
-    ),
+    rec_field: $ => seq($.lident, ':', $.type),
     eff_row: $ => choice(
       '<>',
       prec.left(6, seq('<', $.lident, '>')),
@@ -236,7 +233,6 @@ module.exports = grammar({
     ),
     ctrl_expr: $ => choice(
       prec.right(seq('let', $.let_binder, '=', $.expr, 'in', $.expr)),
-      prec.right(seq('with', $.expr, 'in', $.expr)),
       prec.right(seq('if', $.expr, '=>', $.expr, 'else', $.expr)),
       prec.right(seq('\\', $.params, '=>', $.expr)),
       prec.right(seq('\\', $.arms)),
@@ -298,6 +294,8 @@ module.exports = grammar({
       seq('(', $.expr, ':', $.type, ')'),
       seq('{', $.dot_inits, optional($.opt_comma), '}'),
       seq('{', $.dot_inits, '|', $.expr, '}'),
+      prec.left(15, seq('{', $.dot_inits, ',', '.', '.', $.op_expr, '}')),
+      prec.left(15, seq('{', '.', '.', $.op_expr, '}')),
       seq('@use', '{', $.use_inits, optional($.opt_comma), '}'),
       seq('{', '}'),
       seq('{', $.elem_list, optional($.opt_comma), '}'),
@@ -349,7 +347,6 @@ module.exports = grammar({
     dot_inits: $ => choice(
       prec.left(15, seq('.', $.lident, '=', $.expr)),
       prec.left(15, seq($.dot_inits, ',', '.', $.lident, '=', $.expr)),
-      seq($.dot_inits, ',', 'with', $.op_expr),
     ),
     use_inits: $ => choice(
       prec.left(15, seq('.', $.lident, '=', $.expr)),

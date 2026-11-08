@@ -18,10 +18,10 @@ $ @mod TREE_SITTER_GEN
 #         token's level.
 #       - Bison names terminals but never spells them; `tokens` below does.
 
-$ with IO
-$ with OPT
-$ with STR
-$ with VEC
+$ @import IO
+$ @import OPT
+$ @import STR
+$ @import VEC
 
 $ spec_path : @Str = "documentation/ares.y"
 
@@ -51,6 +51,7 @@ $ tokens : @Vec { @Str, @Str } = [
     { "AT_USE", "'@use'" },
     { "AT_IFACE", "$.at_iface" },
     { "AT_PRIVATE", "'@private'" },
+    { "AT_IMPORT", "'@import'" },
     { "AT_EXTERN", "'@extern'" },
     { "AT_ARRAY", "'@Array'" },
     { "AT_TRUE", "'@true'" },
@@ -74,7 +75,6 @@ $ tokens : @Vec { @Str, @Str } = [
     { "KW_IN", "'in'" },
     { "KW_IF", "'if'" },
     { "KW_ELSE", "'else'" },
-    { "KW_WITH", "'with'" },
     { "KW_DO", "'do'" },
     { "KW_CTL", "'ctl'" },
     { "SEMI", "';'" },

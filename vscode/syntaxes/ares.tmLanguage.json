@@ -16,7 +16,7 @@
           }
         },
         {
-          "match": "^(\\$)\\s*(with)\\s+([A-Za-z_][A-Za-z0-9_.]*)",
+          "match": "^(\\$)\\s*(@import)\\s+(?:[A-Z][A-Za-z0-9_]*\\s*=\\s*)?([A-Za-z_][A-Za-z0-9_.]*)",
           "captures": {
             "1": { "name": "punctuation.definition.item.ares" },
             "2": { "name": "keyword.control.import.ares" },
@@ -208,7 +208,7 @@
           "name": "keyword.control.conditional.ares"
         },
         {
-          "match": "\\b(let|in|with|do|ctl)\\b",
+          "match": "\\b(let|in|do|ctl)\\b",
           "name": "keyword.control.ares"
         }
       ]

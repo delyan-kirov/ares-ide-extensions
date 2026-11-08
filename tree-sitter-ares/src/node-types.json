@@ -170,6 +170,10 @@
           "named": true
         },
         {
+          "type": "op_expr",
+          "named": true
+        },
+        {
           "type": "operator_name",
           "named": true
         },
@@ -319,10 +323,6 @@
         {
           "type": "lident",
           "named": true
-        },
-        {
-          "type": "op_expr",
-          "named": true
         }
       ]
     }
@@ -450,6 +450,21 @@
     }
   },
   {
+    "type": "entry_splice",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "expr",
     "named": true,
     "fields": {},
@@ -500,15 +515,15 @@
       "required": true,
       "types": [
         {
+          "type": "entry_splice",
+          "named": true
+        },
+        {
           "type": "lident",
           "named": true
         },
         {
           "type": "type",
-          "named": true
-        },
-        {
-          "type": "type_app_head",
           "named": true
         }
       ]
@@ -677,10 +692,6 @@
           "named": true
         },
         {
-          "type": "opt_comma",
-          "named": true
-        },
-        {
           "type": "opt_sig",
           "named": true
         },
@@ -797,25 +808,6 @@
   },
   {
     "type": "import",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "import",
-          "named": true
-        },
-        {
-          "type": "import_entry",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "import_entry",
     "named": true,
     "fields": {},
     "children": {
@@ -1916,11 +1908,11 @@
       "required": true,
       "types": [
         {
-          "type": "payload_decl",
+          "type": "entry_splice",
           "named": true
         },
         {
-          "type": "type_app_head",
+          "type": "payload_decl",
           "named": true
         },
         {
@@ -2121,6 +2113,10 @@
     "named": false
   },
   {
+    "type": "@import",
+    "named": false
+  },
+  {
     "type": "@main",
     "named": false
   },
@@ -2240,10 +2236,6 @@
   {
     "type": "uident",
     "named": true
-  },
-  {
-    "type": "with",
-    "named": false
   },
   {
     "type": "{",

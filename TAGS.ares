@@ -25,10 +25,10 @@ $ @mod TAGS
 #       Everything is a `List`, not a `@Vec`: a native `@vec_push` copies the
 #       vector, so growing one token at a time is quadratic.
 
-$ with IO
-$ with LIST
-$ with OPT
-$ with STR
+$ @import IO
+$ @import LIST
+$ @import OPT
+$ @import STR
 
 # A token, the line it is on and where that line starts. `item` marks a `$`
 # at the start of a line, which begins an item.
@@ -224,7 +224,7 @@ $ item : Tok -> List Tok -> St -> St = \dollar ts st =>
         St.{ .src = st.src, .module = st.module, .private = @true, .tags = st.tags }
     else if head == "(" =>
         tag st (operator (drop 1 ts) "") dollar "f" ""
-    else if is_lower_name head && head != "with" =>
+    else if is_lower_name head =>
         tag st head dollar "f" ""
     else if is_upper_name head && peek ts 1 == ":" && type_kind (peek ts 2) != "" =>
         let kind = type_kind (peek ts 2) in
@@ -253,11 +253,7 @@ $ members : List Tok -> @Int -> @Bool -> @Str -> @Str -> St
                 next (depth - 1) @false st
             else if depth == 0 && s == "," =>
                 next 0 @true st
-            else if depth == 0
-                && expect
-                && s != "with"
-                && STR.is_alpha (@array_get s 0)
-                && peek rest 0 == ":" =>
+            else if depth == 0 && expect && STR.is_alpha (@array_get s 0) && peek rest 0 == ":" =>
                 next 0 @false (tag st s t (member_kind kind) (scope_name kind ++ ":" ++ owner))
             else
                 next depth @false st

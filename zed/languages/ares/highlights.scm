@@ -42,10 +42,10 @@
 ; An `@` name used as a value is an intrinsic.
 (atom (at_tycon) @function)
 
-["let" "in" "with"] @keyword
+["let" "in"] @keyword
 ["if" "else"] @keyword
 ["do" "ctl"] @keyword
-["@mod" "@struct" "@union" "@alias" "@effect" "@main" "@build" "@e" "@run" "@use" "@private" "@extern" "@Array"] @keyword
+["@mod" "@struct" "@union" "@alias" "@effect" "@main" "@build" "@e" "@run" "@use" "@private" "@import" "@extern" "@Array"] @keyword
 "$" @punctuation.special
 
 ["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "&&" "||" "!" "..." "<>" "\\"] @operator
