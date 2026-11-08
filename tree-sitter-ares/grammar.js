@@ -383,8 +383,12 @@ module.exports = grammar({
       seq($.arms, $.arm),
     ),
     alts: $ => choice(
-      seq('|', $.pattern),
-      seq($.alts, '|', $.pattern),
+      seq('|', $.arm_pats),
+      seq($.alts, '|', $.arm_pats),
+    ),
+    arm_pats: $ => choice(
+      $.pattern,
+      seq($.arm_pats, ',', $.pattern),
     ),
     arm: $ => choice(
       seq($.alts, '=>', $.expr),

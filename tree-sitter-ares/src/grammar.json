@@ -4575,7 +4575,7 @@
             },
             {
               "type": "SYMBOL",
-              "name": "pattern"
+              "name": "arm_pats"
             }
           ]
         },
@@ -4589,6 +4589,32 @@
             {
               "type": "STRING",
               "value": "|"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "arm_pats"
+            }
+          ]
+        }
+      ]
+    },
+    "arm_pats": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "pattern"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "arm_pats"
+            },
+            {
+              "type": "STRING",
+              "value": ","
             },
             {
               "type": "SYMBOL",

@@ -12,7 +12,7 @@
           "named": true
         },
         {
-          "type": "pattern",
+          "type": "arm_pats",
           "named": true
         }
       ]
@@ -70,6 +70,25 @@
         },
         {
           "type": "expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "arm_pats",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "arm_pats",
+          "named": true
+        },
+        {
+          "type": "pattern",
           "named": true
         }
       ]
