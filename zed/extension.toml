@@ -1,19 +1,19 @@
-id = "thrax"
-name = "Thrax"
+id = "ares"
+name = "Ares"
 version = "0.1.0"
 schema_version = 1
 authors = ["Delyan Kirov"]
-description = "Thrax: diagnostics, fixes, hover, completion and formatting from `thrax lsp`"
-repository = "https://github.com/delyan-kirov/Thrax"
+description = "Ares: diagnostics, fixes, hover, completion and formatting from `ares lsp`"
+repository = "https://github.com/delyan-kirov/Ares"
 
-[language_servers.thrax]
-name = "Thrax"
-languages = ["Thrax"]
+[language_servers.ares]
+name = "Ares"
+languages = ["Ares"]
 
 # Zed fetches the grammar with git at `rev` and compiles `path`/src/parser.c:
-# after regenerating the grammar (`thxdo tree-sitter`) and committing it, point
+# after regenerating the grammar (`thrax tree-sitter`) and committing it, point
 # `rev` at that commit.
-[grammars.thrax]
-repository = "https://github.com/delyan-kirov/thrax-ide-extensions"
+[grammars.ares]
+repository = "https://github.com/delyan-kirov/ares-ide-extensions"
 rev = "077f2cf7ea474063a24b323589194fa546de016e"
-path = "tree-sitter-thrax"
+path = "tree-sitter-ares"

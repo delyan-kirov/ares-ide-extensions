@@ -1,7 +1,7 @@
-# Native builds of TAGS.thx and the generators (`thrax build`)
-thrax-out/
+# Native builds of TAGS.ares and the generators (`ares build`)
+ares-out/
 
-# Written by `thxdo tags`
+# Written by `thrax tags`
 tags
 
 # VS Code: npm install and the packaged extension

@@ -1,13 +1,13 @@
 $ @mod TAGS
 
-# \file TAGS.thx
-# \info Write a ctags-format `tags` file for Thrax sources, for Vim, Neovim and
+# \file TAGS.ares
+# \info Write a ctags-format `tags` file for Ares sources, for Vim, Neovim and
 #       anything else that reads one:
 #
-#           thxdo tags [-o FILE] [PATH ...]
-#           thrax run tools/editors/TAGS.thx [-o FILE] [PATH ...]
+#           thrax tags [-o FILE] [PATH ...]
+#           ares run tools/editors/TAGS.ares [-o FILE] [PATH ...]
 #
-#       A PATH is a `.thx` file or a directory searched for them (default `.`).
+#       A PATH is a `.ares` file or a directory searched for them (default `.`).
 #       FILE defaults to `tags`; `-` writes to stdout. File names are written as
 #       given (relative to the current directory), so write the tags file there.
 #
@@ -75,54 +75,78 @@ $ Pos : @struct = at: @Int, line: @Int, bol: @Int,
 
 $ block_end : @Str -> Pos -> @Int -> Pos = \s p depth =>
     let i = p.at in
-    if depth == 0 || i >= @array_len s => p
+    if depth == 0 || i >= @array_len s =>
+        p
     else
         let c = @array_get s i in
         if c == 35 && byte s (i + 1) == 45 =>
             block_end s Pos.{ .at = i + 2, .line = p.line, .bol = p.bol } (depth + 1)
         else if c == 45 && byte s (i + 1) == 35 =>
             block_end s Pos.{ .at = i + 2, .line = p.line, .bol = p.bol } (depth - 1)
-        else if c == 10 => block_end s Pos.{ .at = i + 1, .line = p.line + 1, .bol = i + 1 } depth
-        else block_end s Pos.{ .at = i + 1, .line = p.line, .bol = p.bol } depth
+        else if c == 10 =>
+            block_end s Pos.{ .at = i + 1, .line = p.line + 1, .bol = i + 1 } depth
+        else
+            block_end s Pos.{ .at = i + 1, .line = p.line, .bol = p.bol } depth
 
 # Past a string literal, as the lexer reads one: one line, `\` escapes in the
 # text, and a `?( ... )` interpolant may hold strings of its own.
 $ string_end : @Str -> @Int -> @Int -> @Int = \s i depth =>
-    if i >= @array_len s || @array_get s i == 10 => i
+    if i >= @array_len s || @array_get s i == 10 =>
+        i
     else
         let c = @array_get s i in
         if depth == 0 =>
-            if c == 92 => string_end s (i + 2) 0
-            else if c == 34 => i + 1
-            else if c == 63 && byte s (i + 1) == 40 => string_end s (i + 2) 1
-            else string_end s (i + 1) 0
-        else if c == 40 => string_end s (i + 1) (depth + 1)
-        else if c == 41 => string_end s (i + 1) (depth - 1)
-        else if c == 34 => string_end s (nested_end s (i + 1)) depth
-        else string_end s (i + 1) depth
+            if c == 92 =>
+                string_end s (i + 2) 0
+            else if c == 34 =>
+                i + 1
+            else if c == 63 && byte s (i + 1) == 40 =>
+                string_end s (i + 2) 1
+            else
+                string_end s (i + 1) 0
+        else if c == 40 =>
+            string_end s (i + 1) (depth + 1)
+        else if c == 41 =>
+            string_end s (i + 1) (depth - 1)
+        else if c == 34 =>
+            string_end s (nested_end s (i + 1)) depth
+        else
+            string_end s (i + 1) depth
 
 $ nested_end : @Str -> @Int -> @Int = \s i =>
-    if i >= @array_len s || @array_get s i == 10 => i
-    else if @array_get s i == 92 => nested_end s (i + 2)
-    else if @array_get s i == 34 => i + 1
-    else nested_end s (i + 1)
+    if i >= @array_len s || @array_get s i == 10 =>
+        i
+    else if @array_get s i == 92 =>
+        nested_end s (i + 2)
+    else if @array_get s i == 34 =>
+        i + 1
+    else
+        nested_end s (i + 1)
 
 $ lex : @Str -> List Tok = \s => LIST.reverse (lex_from s 0 1 0 List.Nil)
 
 $ lex_from : @Str -> @Int -> @Int -> @Int -> List Tok -> List Tok = \s i line bol acc =>
-    if i >= @array_len s => acc
+    if i >= @array_len s =>
+        acc
     else
         let c = @array_get s i in
-        if c == 10 => lex_from s (i + 1) (line + 1) (i + 1) acc
-        else if STR.is_space c => lex_from s (i + 1) line bol acc
+        if c == 10 =>
+            lex_from s (i + 1) (line + 1) (i + 1) acc
+        else if STR.is_space c =>
+            lex_from s (i + 1) line bol acc
         else if c == 35 && byte s (i + 1) == 45 =>
             let e = block_end s Pos.{ .at = i + 2, .line = line, .bol = bol } 1 in
             lex_from s e.at e.line e.bol acc
-        else if c == 35 => lex_from s (run_end (\b => b != 10) s i) line bol acc
-        else if c == 34 => lex_from s (string_end s (i + 1) 0) line bol acc
-        else if is_word_start c => emit s i (run_end is_word s (i + 1)) line bol acc
-        else if is_op c => emit s i (run_end is_op s (i + 1)) line bol acc
-        else emit s i (i + 1) line bol acc
+        else if c == 35 =>
+            lex_from s (run_end (\b => b != 10) s i) line bol acc
+        else if c == 34 =>
+            lex_from s (string_end s (i + 1) 0) line bol acc
+        else if is_word_start c =>
+            emit s i (run_end is_word s (i + 1)) line bol acc
+        else if is_op c =>
+            emit s i (run_end is_op s (i + 1)) line bol acc
+        else
+            emit s i (i + 1) line bol acc
 
 $ emit : @Str -> @Int -> @Int -> @Int -> @Int -> List Tok -> List Tok = \s i j line bol acc =>
     lex_from s j line bol (token s i j line bol :: acc)
@@ -135,7 +159,8 @@ $ token : @Str -> @Int -> @Int -> @Int -> @Int -> Tok = \s i j line bol =>
 
 # The text of the `k`th token of the current item, or "" past its end.
 $ peek : List Tok -> @Int -> @Str = \ts k =>
-    ts |> \ | List.Cons.{ t, rest } if !t.item => if k == 0 => t.text else peek rest (k - 1) | _ => ""
+    ts |>
+        \ | List.Cons.{ t, rest } if !t.item => if k == 0 => t.text else peek rest (k - 1) | _ => ""
 
 $ drop : @Int -> List Tok -> List Tok = \k ts =>
     ts |> \ | List.Cons.{ t, rest } if k > 0 => drop (k - 1) rest | _ => ts
@@ -147,24 +172,24 @@ $ is_upper_name : @Str -> @Bool = \s => !(STR.is_empty s) && STR.is_upper (@arra
 
 $ type_kind : @Str -> @Str = \d =>
     d |> \
-    | "@struct" => "s"
-    | "@union" => "u"
-    | "@alias" => "t"
-    | "@effect" => "e"
-    | _ => ""
+        | "@struct" => "s"
+        | "@union"  => "u"
+        | "@alias"  => "t"
+        | "@effect" => "e"
+        | _         => ""
 
 $ member_kind : @Str -> @Str = \k =>
     k |> \
-    | "s" => "m"
-    | "u" => "c"
-    | "e" => "o"
-    | _ => ""
+        | "s" => "m"
+        | "u" => "c"
+        | "e" => "o"
+        | _   => ""
 
 $ scope_name : @Str -> @Str = \k =>
     k |> \
-    | "s" => "struct"
-    | "u" => "union"
-    | _ => "effect"
+        | "s" => "struct"
+        | "u" => "union"
+        | _   => "effect"
 
 $ St : @struct = src: @Str, module: @Str, private: @Bool, tags: List Tag,
 
@@ -173,41 +198,40 @@ $ line_text : @Str -> Tok -> @Str = \s t => STR.substr s t.bol (run_end (\b => b
 
 $ tag : St -> @Str -> Tok -> @Str -> @Str -> St = \st name at kind scope =>
     let t = Tag.{
-            .name = name,
-            .line = at.line,
-            .text = line_text st.src at,
-            .kind = kind,
-            .scope = scope,
-            .private = st.private,
-        } in
+        .name = name,
+        .line = at.line,
+        .text = line_text st.src at,
+        .kind = kind,
+        .scope = scope,
+        .private = st.private,
+    } in
     St.{ .src = st.src, .module = st.module, .private = st.private, .tags = t :: st.tags }
 
 $ items : List Tok -> St -> St = \ts st =>
     ts |> \
-    | List.Cons.{ t, rest } if t.item => items rest (item t rest st)
-    | List.Cons.{ t, rest } => items rest st
-    | _ => st
+        | List.Cons.{ t, rest } if t.item => items rest (item t rest st)
+        | List.Cons.{ t, rest }           => items rest st
+        | _                               => st
 
 # The item that `dollar` begins, with `ts` the tokens after it.
 $ item : Tok -> List Tok -> St -> St = \dollar ts st =>
     let head = peek ts 0 in
     if head == "@mod" =>
         let name = peek ts 1 in
-        tag St.{
-            .src = st.src,
-            .module = name,
-            .private = st.private,
-            .tags = st.tags
-        } name dollar "n" ""
+        tag St.{ .src = st.src, .module = name, .private = st.private, .tags = st.tags } name dollar
+            "n" ""
     else if head == "@private" =>
         St.{ .src = st.src, .module = st.module, .private = @true, .tags = st.tags }
-    else if head == "(" => tag st (operator (drop 1 ts) "") dollar "f" ""
-    else if is_lower_name head && head != "with" => tag st head dollar "f" ""
+    else if head == "(" =>
+        tag st (operator (drop 1 ts) "") dollar "f" ""
+    else if is_lower_name head && head != "with" =>
+        tag st head dollar "f" ""
     else if is_upper_name head && peek ts 1 == ":" && type_kind (peek ts 2) != "" =>
         let kind = type_kind (peek ts 2) in
         let typed = tag st head dollar kind "" in
         if kind == "t" => typed else members (after_eq (drop 3 ts)) 0 @true kind head typed
-    else st
+    else
+        st
 
 $ operator : List Tok -> @Str -> @Str = \ts acc =>
     let s = peek ts 0 in if s == ")" || s == "" => acc else operator (drop 1 ts) (acc ++ s)
@@ -263,39 +287,41 @@ $ entry : @Str -> @Str -> @Str -> Tag -> @Str = \file pat name t =>
 $ entries : @Str -> @Str -> List @Str -> Tag -> List @Str = \file module acc t =>
     let pat = pattern (STR.replace t.text "\r" "") in
     let plain = entry file pat t.name t in
-    let owner = STR.find t.scope ":" |> \
-        | Option.Some.{ c } => STR.substr t.scope (c + 1) (@array_len t.scope)
-        | _ => if t.private || t.kind == "n" || module == "" => "" else module in
+    let owner =
+        STR.find t.scope ":" |> \
+            | Option.Some.{ c } => STR.substr t.scope (c + 1) (@array_len t.scope)
+            | _                 => if t.private || t.kind == "n" || module == "" => "" else module
+    in
     if owner == "" => plain :: acc else entry file pat (owner ++ "." ++ t.name) t :: plain :: acc
 
 $ file_entries : List @Str -> @Str -> <@IO> List @Str = \acc file =>
     IO.read_file file |> \
-    | Option.Some.{ src } =>
-        let st = items (
-                lex src
-            ) St.{ .src = src, .module = "", .private = @false, .tags = List.Nil } in
-        LIST.foldl (entries file st.module) acc st.tags
-    | _ => IO.eprintln ("TAGS: cannot read " ++ file); acc
+        | Option.Some.{ src } =>
+            let st = items (lex src)
+                St.{ .src = src, .module = "", .private = @false, .tags = List.Nil } in
+            LIST.foldl (entries file st.module) acc st.tags
+        | _ => IO.eprintln ("TAGS: cannot read " ++ file); acc
 
 # Byte-wise, as Vim's binary search over a sorted tags file expects.
 $ sort : List @Str -> List @Str = \xs =>
     xs |> \
-    | List.Cons.{ a, List.Cons.{ b, rest } } =>
-        let halves = split xs List.Nil List.Nil in merge (sort halves.0) (sort halves.1) List.Nil
-    | _ => xs
+        | List.Cons.{ a, List.Cons.{ b, rest } } =>
+            let halves = split xs List.Nil List.Nil in
+            merge (sort halves.0) (sort halves.1) List.Nil
+        | _ => xs
 
 $ split : List @Str -> List @Str -> List @Str -> { List @Str, List @Str } = \xs l r =>
     xs |> \ | List.Cons.{ x, rest } => split rest r (x :: l) | _ => { l, r }
 
 $ merge : List @Str -> List @Str -> List @Str -> List @Str = \xs ys acc =>
     xs |> \
-    | List.Cons.{ x, xr } =>
-        (
+        | List.Cons.{ x, xr } => (
             ys |> \
-            | List.Cons.{ y, yr } => if y < x => merge xs yr (y :: acc) else merge xr ys (x :: acc)
-            | _ => LIST.reverse_onto xs acc
+                | List.Cons.{ y, yr } =>
+                    if y < x => merge xs yr (y :: acc) else merge xr ys (x :: acc)
+                | _                   => LIST.reverse_onto xs acc
         )
-    | _ => LIST.reverse_onto ys acc
+        | _                   => LIST.reverse_onto ys acc
 
 # ---- files ------------------------------------------------------------------
 
@@ -304,24 +330,30 @@ $ sh_quote : @Str -> @Str = \s => "'" ++ STR.replace s "'" "'\\''" ++ "'"
 $ find_cmd : @Str -> @Str = \dir =>
     "find "
         ++ sh_quote dir
-        ++ " \\( -name .git -o -name target -o -name thrax-out -o -name node_modules \\) -prune"
-        ++ " -o -type f -name '*.thx' -print"
+        ++ " \\( -name .git -o -name target -o -name ares-out -o -name node_modules \\) -prune"
+        ++ " -o -type f -name '*.ares' -print"
 
 # The lines a stream gives, as they come.
 $ read_lines : @Int -> @Str -> List @Str -> <@IO> List @Str = \f line acc =>
     let c = C.fgetc f in
-    if c == 10 => read_lines f "" (if STR.is_empty line => acc else line :: acc)
-    else if c >= 0 && c <= 255 => read_lines f (@array_push line c) acc
-    else if STR.is_empty line => acc
-    else line :: acc
+    if c == 10 =>
+        read_lines f "" (if STR.is_empty line => acc else line :: acc)
+    else if c >= 0 && c <= 255 =>
+        read_lines f (@array_push line c) acc
+    else if STR.is_empty line =>
+        acc
+    else
+        line :: acc
 
 $ drop_dot : @Str -> @Str = \p => if STR.starts_with p "./" => STR.substr p 2 (@array_len p) else p
 
 $ sources : List @Str -> @Str -> <@IO> List @Str = \acc path =>
-    if STR.ends_with path ".thx" => path :: acc
+    if STR.ends_with path ".ares" =>
+        path :: acc
     else
         let f = C.popen { find_cmd path, "r" } in
-        if f == 0 => acc
+        if f == 0 =>
+            acc
         else
             let found = read_lines f "" List.Nil in
             C.pclose f; LIST.foldl (\a p => drop_dot p :: a) acc found
@@ -329,24 +361,26 @@ $ sources : List @Str -> @Str -> <@IO> List @Str = \acc path =>
 $ header : @Str =
     "!_TAG_FILE_FORMAT\t2\t/extended format/\n"
         ++ "!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted, 2=foldcase/\n"
-        ++ "!_TAG_PROGRAM_NAME\tthrax TAGS.thx\t//\n"
+        ++ "!_TAG_PROGRAM_NAME\tares TAGS.ares\t//\n"
 
 $ fold_io : (a -> b -> <@IO> a) -> a -> List b -> <@IO> a = \f acc xs =>
     xs |> \ | List.Cons.{ x, rest } => fold_io f (f acc x) rest | _ => acc
 
 $ write_lines : @Int -> List @Str -> <@IO> {} = \f xs =>
     xs |> \
-    | List.Cons.{ x, rest } =>
-        let l = x ++ "\n" in C.fwrite { l, 1, @array_len l, f }; write_lines f rest
-    | _ => {}
+        | List.Cons.{ x, rest } =>
+            let l = x ++ "\n" in C.fwrite { l, 1, @array_len l, f }; write_lines f rest
+        | _ => {}
 
 $ Opts : @struct = out: @Str, paths: List @Str,
 
 $ parse_args : @Vec @Str -> @Int -> Opts -> Opts = \args i o =>
-    if i >= @vec_len args => o
+    if i >= @vec_len args =>
+        o
     else if @vec_get args i == "-o" && i + 1 < @vec_len args =>
         parse_args args (i + 2) Opts.{ .out = @vec_get args (i + 1), .paths = o.paths }
-    else parse_args args (i + 1) Opts.{ .out = o.out, .paths = @vec_get args i :: o.paths }
+    else
+        parse_args args (i + 1) Opts.{ .out = o.out, .paths = @vec_get args i :: o.paths }
 
 $ @main : @Vec @Str -> <@IO> @Int = \args =>
     let o = parse_args args 1 Opts.{ .out = "tags", .paths = List.Nil } in
@@ -354,21 +388,24 @@ $ @main : @Vec @Str -> <@IO> @Int = \args =>
     let files = fold_io sources List.Nil paths in
     let lines = sort (fold_io file_entries List.Nil files) in
     let f = if o.out == "-" => C.fopen { "/dev/stdout", "wb" } else C.fopen { o.out, "wb" } in
-    if f == 0 => IO.eprintln ("TAGS: cannot write " ++ o.out); 1
+    if f == 0 =>
+        IO.eprintln ("TAGS: cannot write " ++ o.out); 1
     else
         C.fwrite { header, 1, @array_len header, f };
         write_lines f lines;
         C.fclose f;
         (
-            if o.out == "-" => {}
+            if o.out == "-" =>
+                {}
             else
-                IO.eprintln (
-                    "TAGS: wrote "
-                        ++ STR.from_int (LIST.length lines)
-                        ++ " tags from "
-                        ++ STR.from_int (LIST.length files)
-                        ++ " files to "
-                        ++ o.out
-                )
+                IO.eprintln
+                    (
+                        "TAGS: wrote "
+                            ++ STR.from_int (LIST.length lines)
+                            ++ " tags from "
+                            ++ STR.from_int (LIST.length files)
+                            ++ " files to "
+                            ++ o.out
+                    )
         );
         0

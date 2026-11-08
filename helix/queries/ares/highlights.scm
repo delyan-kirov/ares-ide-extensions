@@ -1,5 +1,5 @@
-; Thrax highlighting for Helix, over the grammar tools/editors/TREE_SITTER_GEN.thx
-; generates from documentation/thrax.y. When several patterns match a node,
+; Ares highlighting for Helix, over the grammar tools/editors/TREE_SITTER_GEN.ares
+; generates from documentation/ares.y. When several patterns match a node,
 ; the first wins, so specific patterns come before general ones.
 
 (comment) @comment

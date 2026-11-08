@@ -1,33 +1,33 @@
-# Thrax for Helix: merge into ~/.config/helix/languages.toml (or a project's
+# Ares for Helix: merge into ~/.config/helix/languages.toml (or a project's
 # .helix/languages.toml). The `config` table is sent as the server's options;
-# its keys are the `lsp` options a project's BUILD.thx sets, which it overrides.
+# its keys are the `lsp` options a project's BUILD.ares sets, which it overrides.
 #
 # Highlighting needs the tree-sitter grammar, generated from the Bison spec:
-#   thxdo tree-sitter         # writes tools/editors/tree-sitter-thrax
+#   thrax tree-sitter         # writes tools/editors/tree-sitter-ares
 #   hx --grammar build        # compiles it into Helix's runtime
-# and the queries: link tools/editors/helix/queries/thrax to
-# ~/.config/helix/runtime/queries/thrax. Point `source.path` below at your
+# and the queries: link tools/editors/helix/queries/ares to
+# ~/.config/helix/runtime/queries/ares. Point `source.path` below at your
 # checkout.
 
-[language-server.thrax]
-command = "thrax"
+[language-server.ares]
+command = "ares"
 args = ["lsp"]
 
-[language-server.thrax.config.lsp]
+[language-server.ares.config.lsp]
 check = "type"   # or "save"
 focus = "roots"  # "all", "roots" or "one"
 
 [[language]]
-name = "thrax"
-scope = "source.thrax"
-file-types = ["thx"]
-roots = ["BUILD.thx"]
+name = "ares"
+scope = "source.ares"
+file-types = ["ares"]
+roots = ["BUILD.ares"]
 comment-token = "#"
 indent = { tab-width = 4, unit = "    " }
-language-servers = ["thrax"]
-grammar = "thrax"
+language-servers = ["ares"]
+grammar = "ares"
 auto-format = false
 
 [[grammar]]
-name = "thrax"
-source = { path = "/path/to/Thrax/tools/editors/tree-sitter-thrax" }
+name = "ares"
+source = { path = "/path/to/Ares/tools/editors/tree-sitter-ares" }

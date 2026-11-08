@@ -1,6 +1,6 @@
-name = "Thrax"
-grammar = "thrax"
-path_suffixes = ["thx"]
+name = "Ares"
+grammar = "ares"
+path_suffixes = ["ares"]
 line_comments = ["# "]
 block_comment = ["#- ", " -#"]
 tab_size = 4

@@ -1,16 +1,16 @@
-//! Thrax for Zed: starts `thrax lsp` and passes it the user's settings.
+//! Ares for Zed: starts `ares lsp` and passes it the user's settings.
 //!
-//! In Zed's settings, `lsp.thrax.settings` holds the project options to
+//! In Zed's settings, `lsp.ares.settings` holds the project options to
 //! override, by section (`{ "lsp": { "focus": "one" } }`), and
-//! `lsp.thrax.binary` may name the executable and its arguments.
+//! `lsp.ares.binary` may name the executable and its arguments.
 
 use zed_extension_api::{self as zed, serde_json, settings::LspSettings, LanguageServerId, Result};
 
-struct Thrax;
+struct Ares;
 
-impl zed::Extension for Thrax {
+impl zed::Extension for Ares {
     fn new() -> Self {
-        Thrax
+        Ares
     }
 
     fn language_server_command(&mut self, id: &LanguageServerId, worktree: &zed::Worktree) -> Result<zed::Command> {
@@ -18,8 +18,8 @@ impl zed::Extension for Thrax {
         let command = binary
             .as_ref()
             .and_then(|b| b.path.clone())
-            .or_else(|| worktree.which("thrax"))
-            .ok_or("`thrax` is not on the PATH; set `lsp.thrax.binary.path` in Zed's settings")?;
+            .or_else(|| worktree.which("ares"))
+            .ok_or("`ares` is not on the PATH; set `lsp.ares.binary.path` in Zed's settings")?;
         let args = binary.as_ref().and_then(|b| b.arguments.clone()).unwrap_or_else(|| vec!["lsp".into()]);
         let mut env = worktree.shell_env();
         if let Some(extra) = binary.and_then(|b| b.env) {
@@ -43,8 +43,8 @@ impl zed::Extension for Thrax {
         worktree: &zed::Worktree,
     ) -> Result<Option<serde_json::Value>> {
         let settings = LspSettings::for_worktree(id.as_ref(), worktree).ok().and_then(|s| s.settings);
-        Ok(settings.map(|s| serde_json::json!({ "thrax": s })))
+        Ok(settings.map(|s| serde_json::json!({ "ares": s })))
     }
 }
 
-zed::register_extension!(Thrax);
+zed::register_extension!(Ares);

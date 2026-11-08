@@ -1,10 +1,10 @@
--- Thrax for Neovim (0.10+): the `thrax` filetype and the `thrax lsp` server.
+-- Ares for Neovim (0.10+): the `ares` filetype and the `ares lsp` server.
 --
--- Install: put this file on your runtimepath as `lua/thrax.lua` (or copy it
--- into your config) and call `require("thrax").setup()`. Options (all
--- optional) are the `lsp` options a project's `BUILD.thx` sets, and override it:
+-- Install: put this file on your runtimepath as `lua/ares.lua` (or copy it
+-- into your config) and call `require("ares").setup()`. Options (all
+-- optional) are the `lsp` options a project's `BUILD.ares` sets, and override it:
 --
---   require("thrax").setup({ settings = { lsp = { check = "save", focus = "one" } } })
+--   require("ares").setup({ settings = { lsp = { check = "save", focus = "one" } } })
 --
 -- The server marks each diagnostic with a role in `data.role`: `focus` (the
 -- error that matters most), `root`, `consequence`, `grace`, `lint`. The
@@ -15,26 +15,26 @@ local M = {}
 
 function M.setup(opts)
   opts = opts or {}
-  vim.filetype.add({ extension = { thx = "thrax" } })
+  vim.filetype.add({ extension = { ares = "ares" } })
 
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = "thrax",
+    pattern = "ares",
     callback = function(args)
       vim.bo[args.buf].commentstring = "# %s"
       vim.bo[args.buf].expandtab = true
       vim.bo[args.buf].shiftwidth = 4
       vim.bo[args.buf].tabstop = 4
       vim.lsp.start({
-        name = "thrax",
-        cmd = opts.cmd or { "thrax", "lsp" },
-        root_dir = vim.fs.root(args.buf, { "BUILD.thx", ".git" }) or vim.fn.getcwd(),
+        name = "ares",
+        cmd = opts.cmd or { "ares", "lsp" },
+        root_dir = vim.fs.root(args.buf, { "BUILD.ares", ".git" }) or vim.fn.getcwd(),
         init_options = opts.settings or {},
-        settings = { thrax = opts.settings or {} },
+        settings = { ares = opts.settings or {} },
       })
       if opts.format_on_save then
         vim.api.nvim_create_autocmd("BufWritePre", {
           buffer = args.buf,
-          callback = function() vim.lsp.buf.format({ name = "thrax" }) end,
+          callback = function() vim.lsp.buf.format({ name = "ares" }) end,
         })
       end
     end,

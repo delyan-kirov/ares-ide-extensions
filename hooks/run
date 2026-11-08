@@ -1,12 +1,22 @@
 #!/bin/sh
-# The hooks of this repository as the Thrax checkout's tools/editors: each is
-# `run <hook>`, which runs `thxdo hook editors-<hook>` from the Thrax root (the
-# logic is in tools/HOOKS.thx). Installed by `thxdo hooks` there.
+# The hooks of this repository as the Ares checkout's tools/editors: each is
+# `run <hook>`, which runs `thrax hook editors-<hook>` from the Ares root (the
+# logic is in tools/HOOKS.ares). Installed by `thrax hooks` there.
+# A commit outside the nix shell is refused.
 root=$(git rev-parse --show-superproject-working-tree) && [ -n "$root" ] || exit 0
-thxdo=$(command -v thxdo) || {
-    echo "thxdo: not on PATH (outside the nix shell?), $1 hook skipped" >&2
+case $1 in
+pre-commit | commit-msg | pre-push)
+    [ -n "$IN_NIX_SHELL" ] || {
+        echo "thrax: $1 refused outside the nix shell" >&2
+        echo "help: run git from \`nix develop\`; \`--no-verify\` skips the check" >&2
+        exit 1
+    }
+    ;;
+esac
+thrax=$(command -v thrax) || {
+    echo "thrax: not on PATH (outside the nix shell?), $1 hook skipped" >&2
     exit 0
 }
-# git points these at this repository; the Thrax root is another one.
+# git points these at this repository; the Ares root is another one.
 unset $(git rev-parse --local-env-vars)
-cd "$root" && THXDO_BIN=$thxdo exec "$thxdo" hook "editors-$1"
+cd "$root" && THRAX_BIN=$thrax exec "$thrax" hook "editors-$1"

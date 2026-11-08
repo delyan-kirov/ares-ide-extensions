@@ -1,13 +1,13 @@
 {
-  "name": "thrax",
-  "displayName": "Thrax",
-  "description": "Thrax: diagnostics, fixes, hover, completion and formatting from the `thrax lsp` server",
+  "name": "ares",
+  "displayName": "Ares",
+  "description": "Ares: diagnostics, fixes, hover, completion and formatting from the `ares lsp` server",
   "version": "0.1.0",
-  "publisher": "thrax",
+  "publisher": "ares",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/delyan-kirov/Thrax"
+    "url": "https://github.com/delyan-kirov/Ares"
   },
   "engines": {
     "vscode": "^1.82.0"
@@ -21,26 +21,26 @@
   "contributes": {
     "languages": [
       {
-        "id": "thrax",
+        "id": "ares",
         "aliases": [
-          "Thrax",
-          "thrax"
+          "Ares",
+          "ares"
         ],
         "extensions": [
-          ".thx"
+          ".ares"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "thrax",
-        "scopeName": "source.thrax",
-        "path": "./syntaxes/thrax.tmLanguage.json"
+        "language": "ares",
+        "scopeName": "source.ares",
+        "path": "./syntaxes/ares.tmLanguage.json"
       }
     ],
     "configurationDefaults": {
-      "[thrax]": {
+      "[ares]": {
         "editor.insertSpaces": true,
         "editor.tabSize": 4,
         "editor.detectIndentation": false,
@@ -49,20 +49,20 @@
     },
     "commands": [
       {
-        "command": "thrax.restartServer",
+        "command": "ares.restartServer",
         "title": "Restart Language Server",
-        "category": "Thrax"
+        "category": "Ares"
       }
     ],
     "configuration": {
-      "title": "Thrax",
+      "title": "Ares",
       "properties": {
-        "thrax.server.path": {
+        "ares.server.path": {
           "type": "string",
-          "default": "thrax",
-          "description": "The `thrax` executable. The server is started as `<path> [extraArgs] lsp`."
+          "default": "ares",
+          "description": "The `ares` executable. The server is started as `<path> [extraArgs] lsp`."
         },
-        "thrax.server.extraArgs": {
+        "ares.server.extraArgs": {
           "type": "array",
           "items": {
             "type": "string"
@@ -70,7 +70,7 @@
           "default": [],
           "description": "Flags put before `lsp`, such as `--import-dir=DIR`."
         },
-        "thrax.lsp.check": {
+        "ares.lsp.check": {
           "type": [
             "string",
             "null"
@@ -81,9 +81,9 @@
             null
           ],
           "default": null,
-          "markdownDescription": "When the editor checks: as you type (`type`), or only when a file is saved (`save`). Unset: the project's `BUILD.thx`, else `type`."
+          "markdownDescription": "When the editor checks: as you type (`type`), or only when a file is saved (`save`). Unset: the project's `BUILD.ares`, else `type`."
         },
-        "thrax.lsp.focus": {
+        "ares.lsp.focus": {
           "type": [
             "string",
             "null"
@@ -95,9 +95,9 @@
             null
           ],
           "default": null,
-          "markdownDescription": "How loudly errors are shown. `all`: every error at full strength. `roots`: errors that follow from an earlier one are quieter. `one`: only the most important error per file is an error. Unset: the project's `BUILD.thx`, else `roots`."
+          "markdownDescription": "How loudly errors are shown. `all`: every error at full strength. `roots`: errors that follow from an earlier one are quieter. `one`: only the most important error per file is an error. Unset: the project's `BUILD.ares`, else `roots`."
         },
-        "thrax.lsp.debounce_ms": {
+        "ares.lsp.debounce_ms": {
           "type": [
             "integer",
             "null"
@@ -105,17 +105,17 @@
           "minimum": 0,
           "maximum": 5000,
           "default": null,
-          "markdownDescription": "How long typing must pause before the file is checked. Unset: the project's `BUILD.thx`, else 150."
+          "markdownDescription": "How long typing must pause before the file is checked. Unset: the project's `BUILD.ares`, else 150."
         },
-        "thrax.lsp.grace": {
+        "ares.lsp.grace": {
           "type": [
             "boolean",
             "null"
           ],
           "default": null,
-          "markdownDescription": "Hold back errors inside the definition being typed until typing pauses for `grace_ms`. Unset: the project's `BUILD.thx`, else true."
+          "markdownDescription": "Hold back errors inside the definition being typed until typing pauses for `grace_ms`. Unset: the project's `BUILD.ares`, else true."
         },
-        "thrax.lsp.grace_ms": {
+        "ares.lsp.grace_ms": {
           "type": [
             "integer",
             "null"
@@ -123,9 +123,9 @@
           "minimum": 0,
           "maximum": 60000,
           "default": null,
-          "markdownDescription": "The pause after which held-back errors are shown. Unset: the project's `BUILD.thx`, else 1500."
+          "markdownDescription": "The pause after which held-back errors are shown. Unset: the project's `BUILD.ares`, else 1500."
         },
-        "thrax.lsp.max_diagnostics": {
+        "ares.lsp.max_diagnostics": {
           "type": [
             "integer",
             "null"
@@ -133,9 +133,9 @@
           "minimum": 1,
           "maximum": 10000,
           "default": null,
-          "markdownDescription": "The most diagnostics shown per file. Unset: the project's `BUILD.thx`, else 50."
+          "markdownDescription": "The most diagnostics shown per file. Unset: the project's `BUILD.ares`, else 50."
         },
-        "thrax.format.width": {
+        "ares.format.width": {
           "type": [
             "integer",
             "null"
@@ -143,9 +143,9 @@
           "minimum": 40,
           "maximum": 400,
           "default": null,
-          "markdownDescription": "The line width the formatter fits code into. Unset: the project's `BUILD.thx`, else 100."
+          "markdownDescription": "The line width the formatter fits code into. Unset: the project's `BUILD.ares`, else 100."
         },
-        "thrax.format.indent": {
+        "ares.format.indent": {
           "type": [
             "integer",
             "null"
@@ -153,9 +153,9 @@
           "minimum": 1,
           "maximum": 16,
           "default": null,
-          "markdownDescription": "Spaces per indentation level. Unset: the project's `BUILD.thx`, else 4."
+          "markdownDescription": "Spaces per indentation level. Unset: the project's `BUILD.ares`, else 4."
         },
-        "thrax.lints.unreachable_arm": {
+        "ares.lints.unreachable_arm": {
           "type": [
             "string",
             "null"
@@ -167,9 +167,9 @@
             null
           ],
           "default": null,
-          "markdownDescription": "A match arm no value can reach. Unset: the project's `BUILD.thx`, else `warn`."
+          "markdownDescription": "A match arm no value can reach. Unset: the project's `BUILD.ares`, else `warn`."
         },
-        "thrax.trace.server": {
+        "ares.trace.server": {
           "type": "string",
           "enum": [
             "off",
@@ -177,7 +177,7 @@
             "verbose"
           ],
           "default": "off",
-          "description": "Log the protocol traffic with the server to the Thrax output channel."
+          "description": "Log the protocol traffic with the server to the Ares output channel."
         }
       }
     }

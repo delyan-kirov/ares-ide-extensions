@@ -14,10 +14,10 @@ const OPTIONS = {
 let client;
 let output;
 
-// Only the options set here: an unset one is left to the project's BUILD.thx,
+// Only the options set here: an unset one is left to the project's BUILD.ares,
 // which any value sent would override.
 function settings() {
-  const config = vscode.workspace.getConfiguration("thrax");
+  const config = vscode.workspace.getConfiguration("ares");
   const out = {};
   for (const [section, keys] of Object.entries(OPTIONS)) {
     for (const key of keys) {
@@ -31,21 +31,21 @@ function settings() {
 }
 
 async function start() {
-  const config = vscode.workspace.getConfiguration("thrax");
+  const config = vscode.workspace.getConfiguration("ares");
   const server = {
-    command: config.get("server.path") || "thrax",
+    command: config.get("server.path") || "ares",
     args: [...config.get("server.extraArgs", []), "lsp"],
   };
   client = new LanguageClient(
-    "thrax",
-    "Thrax",
+    "ares",
+    "Ares",
     { run: server, debug: server },
     {
-      documentSelector: [{ scheme: "file", language: "thrax" }, { scheme: "untitled", language: "thrax" }],
+      documentSelector: [{ scheme: "file", language: "ares" }, { scheme: "untitled", language: "ares" }],
       initializationOptions: settings(),
       outputChannel: output,
       synchronize: {
-        fileEvents: vscode.workspace.createFileSystemWatcher("**/*.thx"),
+        fileEvents: vscode.workspace.createFileSystemWatcher("**/*.ares"),
       },
     },
   );
@@ -54,10 +54,10 @@ async function start() {
   } catch (e) {
     client = undefined;
     const choice = await vscode.window.showErrorMessage(
-      `Thrax: could not start \`${server.command} lsp\` (${e.message || e}). Is thrax on your PATH?`,
-      "Set thrax.server.path",
+      `Ares: could not start \`${server.command} lsp\` (${e.message || e}). Is ares on your PATH?`,
+      "Set ares.server.path",
     );
-    if (choice) vscode.commands.executeCommand("workbench.action.openSettings", "thrax.server.path");
+    if (choice) vscode.commands.executeCommand("workbench.action.openSettings", "ares.server.path");
   }
 }
 
@@ -69,20 +69,20 @@ async function stop() {
 }
 
 async function activate(context) {
-  output = vscode.window.createOutputChannel("Thrax");
+  output = vscode.window.createOutputChannel("Ares");
   context.subscriptions.push(
     output,
-    vscode.commands.registerCommand("thrax.restartServer", async () => {
+    vscode.commands.registerCommand("ares.restartServer", async () => {
       await stop();
       await start();
     }),
     vscode.workspace.onDidChangeConfiguration(async (e) => {
-      if (!e.affectsConfiguration("thrax")) return;
-      if (e.affectsConfiguration("thrax.server")) {
+      if (!e.affectsConfiguration("ares")) return;
+      if (e.affectsConfiguration("ares.server")) {
         await stop();
         await start();
       } else if (client) {
-        client.sendNotification("workspace/didChangeConfiguration", { settings: { thrax: settings() } });
+        client.sendNotification("workspace/didChangeConfiguration", { settings: { ares: settings() } });
       }
     }),
   );

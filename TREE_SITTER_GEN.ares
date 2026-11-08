@@ -1,10 +1,10 @@
 $ @mod TREE_SITTER_GEN
 
-# \file TREE_SITTER_GEN.thx
-# \info Generate a tree-sitter grammar for Thrax from its Bison spec,
-#       documentation/thrax.y, so editors that highlight through tree-sitter
+# \file TREE_SITTER_GEN.ares
+# \info Generate a tree-sitter grammar for Ares from its Bison spec,
+#       documentation/ares.y, so editors that highlight through tree-sitter
 #       (Helix, Zed) parse with the same grammar the spec states. Writes
-#       tools/editors/tree-sitter-thrax/grammar.js; `thxdo tree-sitter`
+#       tools/editors/tree-sitter-ares/grammar.js; `thrax tree-sitter`
 #       runs this and then `tree-sitter generate` on the result.
 #
 #       Bison and tree-sitter are both LR, so the rules carry over almost one
@@ -23,92 +23,91 @@ $ with OPT
 $ with STR
 $ with VEC
 
-$ spec_path : @Str = "documentation/thrax.y"
+$ spec_path : @Str = "documentation/ares.y"
 
-$ out_dir : @Str = "tools/editors/tree-sitter-thrax"
+$ out_dir : @Str = "tools/editors/tree-sitter-ares"
 
 # ---- the spelling of every terminal ----------------------------------------
 
 # A string is a literal token; `$.name` refers to a lexical rule in `lexical`.
-$ tokens : @Vec { @Str, @Str } =
-    [
-        { "INT", "$.int" },
-        { "REAL", "$.real" },
-        { "IMAG", "$.imag" },
-        { "STR", "$.str" },
-        { "UIDENT", "$.uident" },
-        { "LIDENT", "$.lident" },
-        { "UNDERSCORE", "'_'" },
-        { "HOLE", "$.hole" },
-        { "AT_MOD", "'@mod'" },
-        { "AT_STRUCT", "'@struct'" },
-        { "AT_UNION", "'@union'" },
-        { "AT_ALIAS", "'@alias'" },
-        { "AT_EFFECT", "'@effect'" },
-        { "AT_MAIN", "'@main'" },
-        { "AT_BUILD", "'@build'" },
-        { "AT_E", "'@e'" },
-        { "AT_RUN", "'@run'" },
-        { "AT_USE", "'@use'" },
-        { "AT_IFACE", "$.at_iface" },
-        { "AT_PRIVATE", "'@private'" },
-        { "AT_EXTERN", "'@extern'" },
-        { "AT_ARRAY", "'@Array'" },
-        { "AT_TRUE", "'@true'" },
-        { "AT_FALSE", "'@false'" },
-        { "AT_TYCON", "$.at_tycon" },
-        { "LPAREN", "'('" },
-        { "RPAREN", "')'" },
-        { "LBRACE", "'\{'" },
-        { "RBRACE", "'}'" },
-        { "LBRACK", "'['" },
-        { "RBRACK", "']'" },
-        { "LAMBDA", "'\\\\'" },
-        { "EQ", "'='" },
-        { "ARROW", "'->'" },
-        { "FATARROW", "'=>'" },
-        { "DOLLAR", "'$'" },
-        { "COLON", "':'" },
-        { "COMMA", "','" },
-        { "DOT", "'.'" },
-        { "KW_LET", "'let'" },
-        { "KW_IN", "'in'" },
-        { "KW_IF", "'if'" },
-        { "KW_ELSE", "'else'" },
-        { "KW_WITH", "'with'" },
-        { "KW_DO", "'do'" },
-        { "KW_CTL", "'ctl'" },
-        { "SEMI", "';'" },
-        { "PIPE_BACK", "'<|'" },
-        { "PIPE_FWD", "'|>'" },
-        { "OR_OR", "'||'" },
-        { "AND_AND", "'&&'" },
-        { "EQEQ", "'=='" },
-        { "NEQ", "'!='" },
-        { "LT", "'<'" },
-        { "GT", "'>'" },
-        { "LE", "'<='" },
-        { "GE", "'>='" },
-        { "CONS", "'::'" },
-        { "CONCAT", "'++'" },
-        { "PLUS", "'+'" },
-        { "MINUS", "'-'" },
-        { "STAR", "'*'" },
-        { "SLASH", "'/'" },
-        { "PERCENT", "'%'" },
-        { "CARET", "'^'" },
-        { "AMP3", "'&&&'" },
-        { "BAR3", "'|||'" },
-        { "CARET3", "'^^^'" },
-        { "SHL3", "'<<<'" },
-        { "SHR3", "'>>>'" },
-        { "TILDE3", "'~~~'" },
-        { "COMPOSE", "'<|>'" },
-        { "BANG", "'!'" },
-        { "ANGLE_EMPTY", "'<>'" },
-        { "BAR", "'|'" },
-        { "ELLIPSIS", "'...'" },
-    ]
+$ tokens : @Vec { @Str, @Str } = [
+    { "INT", "$.int" },
+    { "REAL", "$.real" },
+    { "IMAG", "$.imag" },
+    { "STR", "$.str" },
+    { "UIDENT", "$.uident" },
+    { "LIDENT", "$.lident" },
+    { "UNDERSCORE", "'_'" },
+    { "HOLE", "$.hole" },
+    { "AT_MOD", "'@mod'" },
+    { "AT_STRUCT", "'@struct'" },
+    { "AT_UNION", "'@union'" },
+    { "AT_ALIAS", "'@alias'" },
+    { "AT_EFFECT", "'@effect'" },
+    { "AT_MAIN", "'@main'" },
+    { "AT_BUILD", "'@build'" },
+    { "AT_E", "'@e'" },
+    { "AT_RUN", "'@run'" },
+    { "AT_USE", "'@use'" },
+    { "AT_IFACE", "$.at_iface" },
+    { "AT_PRIVATE", "'@private'" },
+    { "AT_EXTERN", "'@extern'" },
+    { "AT_ARRAY", "'@Array'" },
+    { "AT_TRUE", "'@true'" },
+    { "AT_FALSE", "'@false'" },
+    { "AT_TYCON", "$.at_tycon" },
+    { "LPAREN", "'('" },
+    { "RPAREN", "')'" },
+    { "LBRACE", "'\{'" },
+    { "RBRACE", "'}'" },
+    { "LBRACK", "'['" },
+    { "RBRACK", "']'" },
+    { "LAMBDA", "'\\\\'" },
+    { "EQ", "'='" },
+    { "ARROW", "'->'" },
+    { "FATARROW", "'=>'" },
+    { "DOLLAR", "'$'" },
+    { "COLON", "':'" },
+    { "COMMA", "','" },
+    { "DOT", "'.'" },
+    { "KW_LET", "'let'" },
+    { "KW_IN", "'in'" },
+    { "KW_IF", "'if'" },
+    { "KW_ELSE", "'else'" },
+    { "KW_WITH", "'with'" },
+    { "KW_DO", "'do'" },
+    { "KW_CTL", "'ctl'" },
+    { "SEMI", "';'" },
+    { "PIPE_BACK", "'<|'" },
+    { "PIPE_FWD", "'|>'" },
+    { "OR_OR", "'||'" },
+    { "AND_AND", "'&&'" },
+    { "EQEQ", "'=='" },
+    { "NEQ", "'!='" },
+    { "LT", "'<'" },
+    { "GT", "'>'" },
+    { "LE", "'<='" },
+    { "GE", "'>='" },
+    { "CONS", "'::'" },
+    { "CONCAT", "'++'" },
+    { "PLUS", "'+'" },
+    { "MINUS", "'-'" },
+    { "STAR", "'*'" },
+    { "SLASH", "'/'" },
+    { "PERCENT", "'%'" },
+    { "CARET", "'^'" },
+    { "AMP3", "'&&&'" },
+    { "BAR3", "'|||'" },
+    { "CARET3", "'^^^'" },
+    { "SHL3", "'<<<'" },
+    { "SHR3", "'>>>'" },
+    { "TILDE3", "'~~~'" },
+    { "COMPOSE", "'<|>'" },
+    { "BANG", "'!'" },
+    { "ANGLE_EMPTY", "'<>'" },
+    { "BAR", "'|'" },
+    { "ELLIPSIS", "'...'" },
+]
 
 # The lexical rules the named tokens above refer to, as the lexer reads them
 # (crates/frontend/src/lexer.rs).
@@ -147,26 +146,31 @@ $ Rule : @struct = name: @Str, alts: @Vec Alt,
 # The declarations before the first `%%` and the rules up to the second.
 $ sections : @Str -> { @Str, @Str } = \s =>
     STR.find s "\n%%" |> \
-    | Option.Some.{ a } =>
-        let rest = STR.substr s (a + 3) (STR.len s) in
-        (
-            STR.find rest "\n%%" |> \
-            | Option.Some.{ b } => { STR.substr s 0 a, STR.substr rest 0 b }
-            | _ => { STR.substr s 0 a, rest }
-        )
-    | _ => { "", s }
+        | Option.Some.{ a } =>
+            let rest = STR.substr s (a + 3) (STR.len s) in
+            (
+                STR.find rest "\n%%" |> \
+                    | Option.Some.{ b } => { STR.substr s 0 a, STR.substr rest 0 b }
+                    | _                 => { STR.substr s 0 a, rest }
+            )
+        | _ => { "", s }
 
 # Words, and the marks `:` `|` `;`, with `/* ... */` comments dropped.
 $ tokenize : @Str -> @Vec @Str = \s => scan s 0 []
 
 $ scan : @Str -> @Int -> @Vec @Str -> @Vec @Str = \s i acc =>
-    if i >= STR.len s => acc
+    if i >= STR.len s =>
+        acc
     else
         let c = STR.at s i in
-        if STR.is_space c => scan s (i + 1) acc
-        else if opens_comment s i => scan s (comment_end s (i + 2)) acc
-        else if is_mark c => scan s (i + 1) (VEC.push acc (STR.from_byte c))
-        else let j = word_end s i in scan s j (VEC.push acc (STR.substr s i j))
+        if STR.is_space c =>
+            scan s (i + 1) acc
+        else if opens_comment s i =>
+            scan s (comment_end s (i + 2)) acc
+        else if is_mark c =>
+            scan s (i + 1) (VEC.push acc (STR.from_byte c))
+        else
+            let j = word_end s i in scan s j (VEC.push acc (STR.substr s i j))
 
 $ is_mark : @Int -> @Bool = \c => c == 58 || c == 124 || c == 59
 
@@ -177,9 +181,12 @@ $ comment_end : @Str -> @Int -> @Int = \s i =>
     STR.find_from s "*/" i |> \ | Option.Some.{ j } => j + 2 | _ => STR.len s
 
 $ word_end : @Str -> @Int -> @Int = \s i =>
-    if i >= STR.len s => i
-    else if STR.is_space (STR.at s i) || is_mark (STR.at s i) || opens_comment s i => i
-    else word_end s (i + 1)
+    if i >= STR.len s =>
+        i
+    else if STR.is_space (STR.at s i) || is_mark (STR.at s i) || opens_comment s i =>
+        i
+    else
+        word_end s (i + 1)
 
 # `%token` names terminals; each `%left`/`%right`/`%precedence` line names
 # terminals too and opens the next, tighter, precedence level.
@@ -210,20 +217,27 @@ $ header_step : { @Str, @Int, Header } -> @Str -> { @Str, @Int, Header } = \st t
 # `name : alt | alt ... ;`, each alternative a run of symbols and an optional
 # `%prec TOKEN`.
 $ read_rules : @Vec @Str -> @Int -> @Vec Rule -> @Vec Rule = \t i acc =>
-    if i + 1 >= VEC.len t => acc
+    if i + 1 >= VEC.len t =>
+        acc
     else
         let r = read_alts t (i + 2) [] [] "" in
         read_rules t r.1 (VEC.push acc Rule.{ .name = @vec_get t i, .alts = r.0 })
 
-$ read_alts : @Vec @Str -> @Int -> @Vec Alt -> @Vec @Str -> @Str -> { @Vec Alt, @Int } = \t i alts syms prec =>
+$ read_alts : @Vec @Str -> @Int -> @Vec Alt -> @Vec @Str -> @Str
+    -> { @Vec Alt, @Int } = \t i alts syms prec =>
     let done = VEC.push alts Alt.{ .syms = syms, .prec = prec } in
-    if i >= VEC.len t => { done, i }
+    if i >= VEC.len t =>
+        { done, i }
     else
         let tok = @vec_get t i in
-        if tok == ";" => { done, i + 1 }
-        else if tok == "|" => read_alts t (i + 1) done [] ""
-        else if tok == "%prec" => read_alts t (i + 2) alts syms (@vec_get t (i + 1))
-        else read_alts t (i + 1) alts (VEC.push syms tok) prec
+        if tok == ";" =>
+            { done, i + 1 }
+        else if tok == "|" =>
+            read_alts t (i + 1) done [] ""
+        else if tok == "%prec" =>
+            read_alts t (i + 2) alts syms (@vec_get t (i + 1))
+        else
+            read_alts t (i + 1) alts (VEC.push syms tok) prec
 
 # ---- analysis ---------------------------------------------------------------
 
@@ -232,12 +246,15 @@ $ has : @Vec @Str -> @Str -> @Bool = \v s => VEC.contains STR.eq s v
 # The rules that can match nothing: grown to a fixed point from the ones with
 # an alternative whose every symbol is already known nullable.
 $ nullable_set : @Vec Rule -> @Vec @Str -> @Vec @Str = \rules known =>
-    let next = VEC.foldl (
-            \acc r =>
-                if has acc r.name => acc
-                else if VEC.any (\a => VEC.all (has acc) a.syms) r.alts => VEC.push acc r.name
-                else acc
-        ) known rules in
+    let next =
+        VEC.foldl (\acc r =>
+            if has acc r.name =>
+                acc
+            else if VEC.any (\a => VEC.all (has acc) a.syms) r.alts =>
+                VEC.push acc r.name
+            else
+                acc) known rules
+    in
     if VEC.len next == VEC.len known => known else nullable_set rules next
 
 $ Ctx : @struct = terms: @Vec @Str, nullable: @Vec @Str, precs: @Vec Prec,
@@ -247,21 +264,20 @@ $ find_prec : Ctx -> @Str -> Option Prec = \c name => VEC.find (\p => p.name == 
 # Bison's rule precedence: the `%prec` token, else the last terminal that has
 # a precedence.
 $ alt_prec : Ctx -> Alt -> Option Prec = \c a =>
-    if !(a.prec == "") => find_prec c a.prec
+    if !(a.prec == "") =>
+        find_prec c a.prec
     else
-        VEC.foldl (
-            \acc s => find_prec c s |> \ | Option.Some.{ p } => Option.Some.{ p } | _ => acc
-        ) Option.None a.syms
+        VEC.foldl (\acc s => find_prec c s |> \ | Option.Some.{ p } => Option.Some.{ p } | _ => acc)
+            Option.None a.syms
 
 # Terminals the rules use that `tokens` does not spell.
 $ unmapped : Ctx -> @Vec Rule -> @Vec @Str = \c rules =>
     let used = VEC.flat_map (\r => VEC.flat_map (\a => a.syms) r.alts) rules in
-    VEC.foldl (
-        \acc s =>
-            if has c.terms s && is_none (VEC.lookup STR.eq s tokens) && !(has acc s) =>
-                VEC.push acc s
-            else acc
-    ) [] used
+    VEC.foldl (\acc s =>
+        if has c.terms s && is_none (VEC.lookup STR.eq s tokens) && !(has acc s) =>
+            VEC.push acc s
+        else
+            acc) [] used
 
 # ---- writing grammar.js -----------------------------------------------------
 
@@ -269,39 +285,49 @@ $ seq_js : @Vec @Str -> @Str = \parts =>
     if VEC.len parts == 1 => @vec_get parts 0 else "seq(" ++ STR.join ", " parts ++ ")"
 
 $ choice_js : @Vec @Str -> @Str = \parts =>
-    if VEC.len parts == 1 => @vec_get parts 0
-    else "choice(\n      " ++ STR.join ",\n      " parts ++ ",\n    )"
+    if VEC.len parts == 1 =>
+        @vec_get parts 0
+    else
+        "choice(\n      " ++ STR.join ",\n      " parts ++ ",\n    )"
 
 $ token_js : @Str -> @Str = \s => unwrap_or (VEC.lookup STR.eq s tokens) s
 
 $ sym_js : Ctx -> @Str -> @Str = \c s =>
-    if has c.terms s => token_js s
-    else if has c.nullable s => "optional($." ++ s ++ ")"
-    else "$." ++ s
+    if has c.terms s =>
+        token_js s
+    else if has c.nullable s =>
+        "optional($." ++ s ++ ")"
+    else
+        "$." ++ s
 
 # An alternative of nullable rules only, as one choice per rule it starts at:
 # that rule required, the ones after it optional.
 $ expansions : Ctx -> @Vec @Str -> @Int -> @Vec @Str = \c syms i =>
-    if i >= VEC.len syms => []
+    if i >= VEC.len syms =>
+        []
     else
         let rest = VEC.map (sym_js c) (VEC.drop (i + 1) syms) in
         VEC.append [seq_js (VEC.append ["$." ++ @vec_get syms i] rest)] (expansions c syms (i + 1))
 
 $ wrap_prec : Ctx -> @Str -> Alt -> @Str -> @Str = \c rule a body =>
     alt_prec c a |> \
-    | Option.Some.{ p } =>
-        let f = p.assoc |> \
-            | "left" => "prec.left"
-            | "right" => "prec.right"
-            | _ => "prec" in
-        f ++ "(" ++ STR.from_int p.level ++ ", " ++ body ++ ")"
-    | _ => if has prefer_shift rule => "prec.right(" ++ body ++ ")" else body
+        | Option.Some.{ p } =>
+            let f =
+                p.assoc |> \
+                    | "left"  => "prec.left"
+                    | "right" => "prec.right"
+                    | _       => "prec"
+            in
+            f ++ "(" ++ STR.from_int p.level ++ ", " ++ body ++ ")"
+        | _ => if has prefer_shift rule => "prec.right(" ++ body ++ ")" else body
 
 $ alt_js : Ctx -> @Str -> Alt -> Option @Str = \c rule a =>
-    if VEC.is_empty a.syms => Option.None
+    if VEC.is_empty a.syms =>
+        Option.None
     else if VEC.all (has c.nullable) a.syms =>
         Option.Some.{ wrap_prec c rule a (choice_js (expansions c a.syms 0)) }
-    else Option.Some.{ wrap_prec c rule a (seq_js (VEC.map (sym_js c) a.syms)) }
+    else
+        Option.Some.{ wrap_prec c rule a (seq_js (VEC.map (sym_js c) a.syms)) }
 
 $ rule_js : Ctx -> Rule -> @Str = \c r =>
     "    " ++ r.name ++ ": $ => " ++ choice_js (VEC.filter_map (alt_js c r.name) r.alts) ++ ",\n"
@@ -310,10 +336,10 @@ $ conflicts_js : @Str =
     STR.concat (VEC.map (\p => "    [$." ++ p.0 ++ ", $." ++ p.1 ++ "],\n") conflicts)
 
 $ grammar_js : Ctx -> @Vec Rule -> @Str = \c rules =>
-    "// AUTOGENERATED by tools/editors/TREE_SITTER_GEN.thx from documentation/thrax.y.\n"
-        ++ "// Do not edit: change the spec or the generator, then run `thxdo tree-sitter`.\n\n"
+    "// AUTOGENERATED by tools/editors/TREE_SITTER_GEN.ares from documentation/ares.y.\n"
+        ++ "// Do not edit: change the spec or the generator, then run `thrax tree-sitter`.\n\n"
         ++ "module.exports = grammar(\{\n"
-        ++ "  name: 'thrax',\n"
+        ++ "  name: 'ares',\n"
         ++ "  word: $ => $.lident,\n"
         ++ "  extras: $ => [/\\s/, $.comment],\n"
         ++ "  conflicts: $ => [\n"
@@ -327,25 +353,28 @@ $ grammar_js : Ctx -> @Vec Rule -> @Str = \c rules =>
 
 $ @main : @Vec @Str -> <@IO> @Int = \args =>
     IO.read_file spec_path |> \
-    | Option.Some.{ src } =>
-        let parts = sections src in
-        let h = read_header (tokenize parts.0) in
-        let rules = read_rules (tokenize parts.1) 0 [] in
-        let c = Ctx.{ .terms = h.terms, .nullable = nullable_set rules [], .precs = h.precs } in
-        let missing = unmapped c rules in
-        if !(VEC.is_empty missing) =>
-            IO.eprintln ("TREE_SITTER_GEN: no tree-sitter spelling for: " ++ STR.join ", " missing);
-            1
-        else
-            C.system ("mkdir -p " ++ out_dir);
-            if IO.write_file (out_dir ++ "/grammar.js") (grammar_js c rules) =>
-                IO.println (
-                    "TREE_SITTER_GEN: wrote "
-                        ++ out_dir
-                        ++ "/grammar.js ("
-                        ++ STR.from_int (VEC.len rules)
-                        ++ " rules)"
-                );
-                0
-            else 1
-    | _ => IO.eprintln ("TREE_SITTER_GEN: cannot read " ++ spec_path); 1
+        | Option.Some.{ src } =>
+            let parts = sections src in
+            let h = read_header (tokenize parts.0) in
+            let rules = read_rules (tokenize parts.1) 0 [] in
+            let c = Ctx.{ .terms = h.terms, .nullable = nullable_set rules [], .precs = h.precs } in
+            let missing = unmapped c rules in
+            if !(VEC.is_empty missing) =>
+                IO.eprintln
+                    ("TREE_SITTER_GEN: no tree-sitter spelling for: " ++ STR.join ", " missing);
+                1
+            else
+                C.system ("mkdir -p " ++ out_dir);
+                if IO.write_file (out_dir ++ "/grammar.js") (grammar_js c rules) =>
+                    IO.println
+                        (
+                            "TREE_SITTER_GEN: wrote "
+                                ++ out_dir
+                                ++ "/grammar.js ("
+                                ++ STR.from_int (VEC.len rules)
+                                ++ " rules)"
+                        );
+                    0
+                else
+                    1
+        | _ => IO.eprintln ("TREE_SITTER_GEN: cannot read " ++ spec_path); 1

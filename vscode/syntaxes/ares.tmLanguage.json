@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "name": "Thrax",
-  "scopeName": "source.thrax",
-  "fileTypes": ["thx"],
+  "name": "Ares",
+  "scopeName": "source.ares",
+  "fileTypes": ["ares"],
   "patterns": [{ "include": "#item" }, { "include": "#expr" }],
   "repository": {
     "item": {
@@ -10,47 +10,47 @@
         {
           "match": "^(\\$)\\s*(@mod)\\s+([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "punctuation.definition.item.thrax" },
-            "2": { "name": "keyword.other.module.thrax" },
-            "3": { "name": "entity.name.namespace.thrax" }
+            "1": { "name": "punctuation.definition.item.ares" },
+            "2": { "name": "keyword.other.module.ares" },
+            "3": { "name": "entity.name.namespace.ares" }
           }
         },
         {
           "match": "^(\\$)\\s*(with)\\s+([A-Za-z_][A-Za-z0-9_.]*)",
           "captures": {
-            "1": { "name": "punctuation.definition.item.thrax" },
-            "2": { "name": "keyword.control.import.thrax" },
-            "3": { "name": "entity.name.namespace.thrax" }
+            "1": { "name": "punctuation.definition.item.ares" },
+            "2": { "name": "keyword.control.import.ares" },
+            "3": { "name": "entity.name.namespace.ares" }
           }
         },
         {
           "match": "^(\\$)\\s*([A-Z][A-Za-z0-9_]*|@I[A-Z][A-Za-z0-9_]*)\\s*(:)\\s*(@struct|@union|@alias|@effect)\\b",
           "captures": {
-            "1": { "name": "punctuation.definition.item.thrax" },
-            "2": { "name": "entity.name.type.thrax" },
-            "3": { "name": "punctuation.separator.type.thrax" },
-            "4": { "name": "storage.type.thrax" }
+            "1": { "name": "punctuation.definition.item.ares" },
+            "2": { "name": "entity.name.type.ares" },
+            "3": { "name": "punctuation.separator.type.ares" },
+            "4": { "name": "storage.type.ares" }
           }
         },
         {
           "match": "^(\\$)\\s*([a-z_][A-Za-z0-9_]*)\\b",
           "captures": {
-            "1": { "name": "punctuation.definition.item.thrax" },
-            "2": { "name": "entity.name.function.thrax" }
+            "1": { "name": "punctuation.definition.item.ares" },
+            "2": { "name": "entity.name.function.ares" }
           }
         },
         {
           "match": "^(\\$)\\s*(\\()([!$%&*+\\-/:;<=>^|~]+)(\\))",
           "captures": {
-            "1": { "name": "punctuation.definition.item.thrax" },
-            "3": { "name": "entity.name.function.operator.thrax" }
+            "1": { "name": "punctuation.definition.item.ares" },
+            "3": { "name": "entity.name.function.operator.ares" }
           }
         },
         {
           "match": "^(\\$)\\s*(@main|@build|@e|@run|@private)\\b",
           "captures": {
-            "1": { "name": "punctuation.definition.item.thrax" },
-            "2": { "name": "keyword.other.directive.thrax" }
+            "1": { "name": "punctuation.definition.item.ares" },
+            "2": { "name": "keyword.other.directive.ares" }
           }
         }
       ]
@@ -64,48 +64,48 @@
         { "include": "#keyword" },
         {
           "match": "\\?\\?\\?",
-          "name": "invalid.deprecated.hole.thrax"
+          "name": "invalid.deprecated.hole.ares"
         },
         {
           "match": "(\\.)\\s*([a-z_][A-Za-z0-9_]*)\\s*(?==[^=>])",
           "captures": {
-            "1": { "name": "punctuation.accessor.thrax" },
-            "2": { "name": "variable.other.property.thrax" }
+            "1": { "name": "punctuation.accessor.ares" },
+            "2": { "name": "variable.other.property.ares" }
           }
         },
         {
           "match": "(?<=\\.)[a-z_][A-Za-z0-9_]*",
-          "name": "variable.other.property.thrax"
+          "name": "variable.other.property.ares"
         },
         {
           "match": "\\b([a-z_][A-Za-z0-9_]*)\\s*(:)(?![:=])",
           "captures": {
-            "1": { "name": "variable.other.property.thrax" }
+            "1": { "name": "variable.other.property.ares" }
           }
         },
         {
           "match": "\\b[A-Z][A-Za-z0-9_]*\\b",
-          "name": "entity.name.type.thrax"
+          "name": "entity.name.type.ares"
         },
         {
           "match": "\\\\",
-          "name": "storage.type.function.lambda.thrax"
+          "name": "storage.type.function.lambda.ares"
         },
         {
           "match": "=>|->",
-          "name": "keyword.operator.arrow.thrax"
+          "name": "keyword.operator.arrow.ares"
         },
         {
           "match": "[!$%&*+\\-/:;<=>^|~]+",
-          "name": "keyword.operator.thrax"
+          "name": "keyword.operator.ares"
         },
         {
           "match": "\\.\\.\\.",
-          "name": "keyword.operator.range.thrax"
+          "name": "keyword.operator.range.ares"
         },
         {
           "match": "[,.]",
-          "name": "punctuation.separator.thrax"
+          "name": "punctuation.separator.ares"
         },
         {
           "begin": "\\(",
@@ -119,32 +119,32 @@
         { "include": "#block-comment" },
         {
           "match": "#.*$",
-          "name": "comment.line.number-sign.thrax"
+          "name": "comment.line.number-sign.ares"
         }
       ]
     },
     "block-comment": {
       "begin": "#-",
       "end": "-#",
-      "name": "comment.block.thrax",
+      "name": "comment.block.ares",
       "patterns": [{ "include": "#block-comment" }]
     },
     "string": {
       "begin": "\"",
       "end": "\"|$",
-      "name": "string.quoted.double.thrax",
+      "name": "string.quoted.double.ares",
       "patterns": [
         {
           "match": "\\\\.",
-          "name": "constant.character.escape.thrax"
+          "name": "constant.character.escape.ares"
         },
         {
           "begin": "\\?\\(",
           "end": "\\)",
-          "beginCaptures": { "0": { "name": "punctuation.section.interpolation.begin.thrax" } },
-          "endCaptures": { "0": { "name": "punctuation.section.interpolation.end.thrax" } },
-          "contentName": "meta.embedded.line.thrax",
-          "name": "meta.interpolation.thrax",
+          "beginCaptures": { "0": { "name": "punctuation.section.interpolation.begin.ares" } },
+          "endCaptures": { "0": { "name": "punctuation.section.interpolation.end.ares" } },
+          "contentName": "meta.embedded.line.ares",
+          "name": "meta.interpolation.ares",
           "patterns": [{ "include": "#expr" }]
         }
       ]
@@ -153,19 +153,19 @@
       "patterns": [
         {
           "match": "\\b0[xX][0-9a-fA-F_]+\\b|\\b0[bB][01_]+\\b",
-          "name": "constant.numeric.integer.thrax"
+          "name": "constant.numeric.integer.ares"
         },
         {
           "match": "\\b[0-9][0-9_]*(\\.[0-9][0-9_]*)?([eE][+-]?[0-9]+)?i\\b",
-          "name": "constant.numeric.imaginary.thrax"
+          "name": "constant.numeric.imaginary.ares"
         },
         {
           "match": "\\b[0-9][0-9_]*\\.[0-9][0-9_]*([eE][+-]?[0-9]+)?\\b|\\b[0-9][0-9_]*[eE][+-]?[0-9]+\\b",
-          "name": "constant.numeric.float.thrax"
+          "name": "constant.numeric.float.ares"
         },
         {
           "match": "\\b[0-9][0-9_]*\\b",
-          "name": "constant.numeric.integer.thrax"
+          "name": "constant.numeric.integer.ares"
         }
       ]
     },
@@ -173,31 +173,31 @@
       "patterns": [
         {
           "match": "@(true|false)\\b",
-          "name": "constant.language.boolean.thrax"
+          "name": "constant.language.boolean.ares"
         },
         {
           "match": "@(int|nat|int8|int16|int32|int64|nat8|nat16|nat32|nat64|float32|float64|str|ptr|bool|array|vec|token|code|future|chan|tvar)\\b",
-          "name": "support.type.builtin.thrax"
+          "name": "support.type.builtin.ares"
         },
         {
           "match": "@(io|meta)\\b",
-          "name": "support.type.effect.thrax"
+          "name": "support.type.effect.ares"
         },
         {
           "match": "@I[A-Z][A-Za-z0-9_]*\\b",
-          "name": "support.type.interface.thrax"
+          "name": "support.type.interface.ares"
         },
         {
           "match": "@(mod|struct|union|alias|effect)\\b",
-          "name": "storage.type.thrax"
+          "name": "storage.type.ares"
         },
         {
           "match": "@(main|build|e|run|ctx|private|extern)\\b",
-          "name": "keyword.other.directive.thrax"
+          "name": "keyword.other.directive.ares"
         },
         {
           "match": "@[A-Za-z][A-Za-z0-9_]*\\b",
-          "name": "support.function.builtin.thrax"
+          "name": "support.function.builtin.ares"
         }
       ]
     },
@@ -205,11 +205,11 @@
       "patterns": [
         {
           "match": "\\b(if|else)\\b",
-          "name": "keyword.control.conditional.thrax"
+          "name": "keyword.control.conditional.ares"
         },
         {
           "match": "\\b(let|in|with|do|ctl)\\b",
-          "name": "keyword.control.thrax"
+          "name": "keyword.control.ares"
         }
       ]
     }
