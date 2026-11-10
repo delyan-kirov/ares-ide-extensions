@@ -47,7 +47,7 @@
           }
         },
         {
-          "match": "^(\\$)\\s*(@main|@build|@e|@run|@private)\\b",
+          "match": "^(\\$)\\s*(@main|@build|@private|&)\\b",
           "captures": {
             "1": { "name": "punctuation.definition.item.ares" },
             "2": { "name": "keyword.other.directive.ares" }
