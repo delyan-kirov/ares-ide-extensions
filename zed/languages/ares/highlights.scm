@@ -15,13 +15,13 @@
 (mod_decl (uident) @type)
 (import) @type
 
-; Types
+; Types. A type is an expression, so an `@` name is a builtin type when it is
+; capitalised (`@Int`) and an intrinsic otherwise (`@vec_len`), and a
+; capitalised name heading an atom is a type (or the module of a qualified
+; name); the constructor after its `.` is matched below.
 (opt_type_params (lident) @type)
-(type_atom (lident) @type)
-(type_atom (uident) @type)
-(type_app_head (uident) @type)
-(type_atom (at_tycon) @type)
-(type_app_head (at_tycon) @type)
+((plain (at_tycon) @type) (#match? @type "^@[A-Z]"))
+(plain (uident) @type)
 (eff_entry (uident) @type)
 (eff_entry (at_tycon) @type)
 (at_iface) @type
@@ -31,16 +31,17 @@
 (dot_inits (lident) @property)
 (field_init (lident) @property)
 (rec_field (lident) @property)
-(atom "." (lident) @property)
-(param (pat_atom (lident) @variable))
+(postfix (lident) @property)
+(param (pat_plain (lident) @variable))
 
-; Constructors, and the module part of a qualified name
+; Constructors: a variant after a `.`
 (variant_decl (uident) @constructor)
-(pat_atom (uident) @constructor)
-(atom (uident) @constructor)
+(pat_plain (uident) @constructor)
+(postfix (uident) @constructor)
+(dot_primary (uident) @constructor)
 
 ; An `@` name used as a value is an intrinsic.
-(atom (at_tycon) @function)
+((plain (at_tycon) @function) (#match? @function "^@[a-z]"))
 
 ["let" "in"] @keyword
 ["if" "else"] @keyword
