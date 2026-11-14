@@ -1,5 +1,5 @@
 ; Ares highlighting for Zed (adapted from the Helix queries), over the grammar tools/editors/TREE_SITTER_GEN.ares
-; generates from documentation/ares.y. When several patterns match a node,
+; generates from documentation/syntax/ares.y. When several patterns match a node,
 ; the first wins, so specific patterns come before general ones.
 
 (comment) @comment

@@ -24,4 +24,4 @@ setting given overrides it. The server is started as
 Errors are ranked: the one that matters most in a file is an Error, errors
 caused by another one are Information, and errors inside the definition being
 typed are held back as Hints until typing pauses. See
-`documentation/lsp.md` in the Ares repository.
+`documentation/tooling/lsp.md` in the Ares repository.

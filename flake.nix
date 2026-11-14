@@ -92,7 +92,7 @@
       };
 
       # Regenerating the grammar: TREE_SITTER_GEN.ares writes grammar.js from
-      # documentation/ares.y, and `tree-sitter generate` (which runs grammar.js
+      # documentation/syntax/ares.y, and `tree-sitter generate` (which runs grammar.js
       # under node) turns it into the C parser Helix and Zed compile. Packaging
       # the VS Code extension (`npx vsce package`) needs node too, and building
       # the Zed extension by hand (`cargo build --target wasm32-wasip2`) the

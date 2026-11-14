@@ -2,7 +2,7 @@
 
 Editor integrations for [Ares](https://github.com/delyan-kirov/Ares), kept as
 the `tools/editors` submodule of the compiler repository. Everything here talks
-to the compiler's language server, `ares lsp`; see `documentation/lsp.md` in
+to the compiler's language server, `ares lsp`; see `documentation/tooling/lsp.md` in
 the Ares repository for what it provides.
 
 | Directory | Editor |
@@ -14,7 +14,7 @@ the Ares repository for what it provides.
 | `tree-sitter-ares/` | the tree-sitter grammar Helix and Zed parse with, generated |
 
 `TREE_SITTER_GEN.ares` generates the grammar from the Bison spec
-`documentation/ares.y` (`thrax tree-sitter` from the Ares root, with the
+`documentation/syntax/ares.y` (`thrax tree-sitter` from the Ares root, with the
 tree-sitter CLI from `flake.nix`). The output is committed because Zed loads a
 grammar only from a git revision.
 
