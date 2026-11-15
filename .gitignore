@@ -1,5 +1,5 @@
 # Native builds of TAGS.ares and the generators (`ares build`)
-ares-out/
+ares-artifacts/
 
 # Written by `thrax tags`
 tags
