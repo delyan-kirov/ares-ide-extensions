@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "publisher": "ares",
   "license": "MIT",
+  "icon": "icons/ares.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/delyan-kirov/Ares"
@@ -29,6 +30,10 @@
         "extensions": [
           ".ares"
         ],
+        "icon": {
+          "light": "./icons/ares-light.svg",
+          "dark": "./icons/ares-dark.svg"
+        },
         "configuration": "./language-configuration.json"
       }
     ],
