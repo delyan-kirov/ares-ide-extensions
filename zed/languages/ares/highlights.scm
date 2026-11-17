@@ -46,10 +46,10 @@
 ["let" "in"] @keyword
 ["if" "else"] @keyword
 ["do" "ctl"] @keyword
-["@mod" "@struct" "@union" "@alias" "@effect" "@main" "@build" "&" "@use" "@private" "@import" "@extern" "@Array"] @keyword
+["@mod" "@struct" "@union" "@alias" "@effect" "@main" "@build" "&" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword
 "$" @punctuation.special
 
-["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "&&" "||" "!" "..." "<>" "\\"] @operator
+["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "~" "&&" "||" "!" "..." "<>" "\\"] @operator
 ["(" ")" "[" "]" "{" "}"] @punctuation.bracket
 ["," "."] @punctuation.delimiter
 

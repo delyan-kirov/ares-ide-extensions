@@ -13,6 +13,8 @@ module.exports = grammar({
     globals: $ => seq(optional($.globals), $.global),
     global: $ => choice(
       seq('$', $.lident, optional($.opt_sig), '=', $.body),
+      seq('$', $.uident, ':', $.expr, '=', $.expr),
+      seq('$', $.uident, ':', $.expr, '=', '@union', $.union_body),
       seq('$', $.uident, ':', '@struct', optional($.opt_type_params), '=', $.struct_body),
       seq('$', $.uident, ':', '@struct', '@extern', $.str, optional($.opt_type_params), '=', $.struct_body),
       seq('$', $.uident, ':', '@union', optional($.opt_type_params), '=', $.union_body),
@@ -99,6 +101,8 @@ module.exports = grammar({
     payload_decl: $ => choice(
       seq('{', '}'),
       seq('{', $.payload_fields, optional($.opt_comma), '}'),
+      seq('{', '}', '->', $.expr),
+      seq('{', $.payload_fields, optional($.opt_comma), '}', '->', $.expr),
       $.app_nb,
       seq($.app_nb, '->', $.expr),
       seq($.app_nb, '->', $.eff_row, $.expr),
@@ -119,6 +123,7 @@ module.exports = grammar({
     op_decl: $ => seq($.lident, ':', $.expr),
     opt_comma: $ => ',',
     use_param: $ => seq('@use', '{', $.use_fields, optional($.opt_comma), '}'),
+    ctx_param: $ => seq('@ctx', '{', $.use_fields, optional($.opt_comma), '}'),
     use_fields: $ => choice(
       seq($.lident, ':', $.expr),
       seq($.use_fields, ',', $.lident, ':', $.expr),
@@ -158,6 +163,7 @@ module.exports = grammar({
       seq($.op_expr, '->', $.eff_row, $.expr),
       seq($.use_param, '->', $.expr),
       seq($.use_param, '->', $.eff_row, $.expr),
+      seq($.ctx_param, '->', $.expr),
     ),
     ctrl_expr: $ => choice(
       prec.right(seq('let', $.let_binder, '=', $.expr, 'in', $.expr)),
@@ -183,6 +189,7 @@ module.exports = grammar({
       prec.left(6, seq($.op_expr, '>', $.op_expr)),
       prec.left(6, seq($.op_expr, '<=', $.op_expr)),
       prec.left(6, seq($.op_expr, '>=', $.op_expr)),
+      prec.left(6, seq($.op_expr, '~', $.op_expr)),
       prec.right(7, seq($.op_expr, '::', $.op_expr)),
       prec.left(8, seq($.op_expr, '++', $.op_expr)),
       prec.left(9, seq($.op_expr, '+', $.op_expr)),
@@ -252,6 +259,8 @@ module.exports = grammar({
       seq('(', $.operator_name, ')'),
       seq('(', $.expr, ':', $.expr, ')'),
       seq('@use', '{', $.use_inits, optional($.opt_comma), '}'),
+      seq('@ctx', '{', $.use_inits, optional($.opt_comma), '}'),
+      '_',
       $.seq_lit,
       '@Array',
     ),

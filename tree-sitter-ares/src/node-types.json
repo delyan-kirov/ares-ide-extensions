@@ -356,6 +356,25 @@
     }
   },
   {
+    "type": "ctx_param",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "opt_comma",
+          "named": true
+        },
+        {
+          "type": "use_fields",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "dot_inits",
     "named": true,
     "fields": {},
@@ -540,6 +559,10 @@
       "types": [
         {
           "type": "ctrl_expr",
+          "named": true
+        },
+        {
+          "type": "ctx_param",
           "named": true
         },
         {
@@ -2031,6 +2054,10 @@
     "named": false
   },
   {
+    "type": "@ctx",
+    "named": false
+  },
+  {
     "type": "@effect",
     "named": false
   },
@@ -2185,6 +2212,10 @@
   },
   {
     "type": "}",
+    "named": false
+  },
+  {
+    "type": "~",
     "named": false
   },
   {
