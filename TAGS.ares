@@ -33,9 +33,9 @@ $ @import ARESxSTR
 
 # A token, the line it is on and where that line starts. `item` marks a `$`
 # at the start of a line, which begins an item.
-$ Tok : @struct = text: @Str, line: @Int, bol: @Int, item: @Bool,
+$ Tok : @Type = @struct text: @Str, line: @Int, bol: @Int, item: @Bool,
 
-$ Tag : @struct = name: @Str, line: @Int, text: @Str, kind: @Str, scope: @Str, private: @Bool,
+$ Tag : @Type = @struct name: @Str, line: @Int, text: @Str, kind: @Str, scope: @Str, private: @Bool,
 
 # ---- scanning ---------------------------------------------------------------
 
@@ -72,7 +72,7 @@ $ run_end : (@Int -> @Bool) -> @Str -> @Int -> @Int = \p s i =>
 
 # A `#- ... -#` block comment nests. `Pos` is an offset, its line and where
 # that line starts.
-$ Pos : @struct = at: @Int, line: @Int, bol: @Int,
+$ Pos : @Type = @struct at: @Int, line: @Int, bol: @Int,
 
 $ block_end : @Str -> Pos -> @Int -> Pos = \s p depth =>
     let i = p.at in
@@ -175,7 +175,6 @@ $ type_kind : @Str -> @Str = \d =>
     d |> \
         | "@struct" => "s"
         | "@union"  => "u"
-        | "@alias"  => "t"
         | "@effect" => "e"
         | _         => ""
 
@@ -192,7 +191,7 @@ $ scope_name : @Str -> @Str = \k =>
         | "u" => "union"
         | _   => "effect"
 
-$ St : @struct = src: @Str, module: @Str, private: @Bool, tags: List Tag,
+$ St : @Type = @struct src: @Str, module: @Str, private: @Bool, tags: List Tag,
 
 # The source line a token is on.
 $ line_text : @Str -> Tok -> @Str = \s t => ARES.substr t.bol (run_end (\b => b != 10) s t.bol) s
@@ -227,10 +226,13 @@ $ item : Tok -> List Tok -> St -> St = \dollar ts st =>
         tag st (operator (drop 1 ts) "") dollar "f" ""
     else if is_lower_name head =>
         tag st head dollar "f" ""
-    else if is_upper_name head && peek ts 1 == ":" && type_kind (peek ts 2) != "" =>
-        let kind = type_kind (peek ts 2) in
-        let typed = tag st head dollar kind "" in
-        if kind == "t" => typed else members (after_eq (drop 3 ts)) 0 @true kind head typed
+    else if is_upper_name head && peek ts 1 == ":" =>
+        let body = after_eq (drop 2 ts) in
+        let kind = type_kind (peek body 0) in
+        if kind == "" =>
+            tag st head dollar "t" ""
+        else
+            members (after_extern (drop 1 body)) 0 @true kind head (tag st head dollar kind "")
     else
         st
 
@@ -239,6 +241,9 @@ $ operator : List Tok -> @Str -> @Str = \ts acc =>
 
 $ after_eq : List Tok -> List Tok = \ts =>
     let s = peek ts 0 in if s == "" => ts else if s == "=" => drop 1 ts else after_eq (drop 1 ts)
+
+# The members of a C-layout type follow its `@extern "abi"`.
+$ after_extern : List Tok -> List Tok = \ts => if peek ts 0 == "@extern" => drop 2 ts else ts
 
 # A member is a name followed by `:` at the top level of the body, first or
 # after a comma.
@@ -369,7 +374,7 @@ $ write_lines : @Int -> List @Str -> <@IO> {} = \f xs =>
             let l = x ++ "\n" in C.fwrite { l, 1, @array_len l, f }; write_lines f rest
         | _ => {}
 
-$ Opts : @struct = out: @Str, paths: List @Str,
+$ Opts : @Type = @struct out: @Str, paths: List @Str,
 
 $ parse_args : @Vec @Str -> @Int -> Opts -> Opts = \args i o =>
     if i >= @vec_len args =>

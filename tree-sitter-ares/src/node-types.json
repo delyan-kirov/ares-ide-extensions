@@ -765,10 +765,6 @@
           "named": true
         },
         {
-          "type": "effect_body",
-          "named": true
-        },
-        {
           "type": "expr",
           "named": true
         },
@@ -789,15 +785,7 @@
           "named": true
         },
         {
-          "type": "opt_type_params",
-          "named": true
-        },
-        {
           "type": "splice",
-          "named": true
-        },
-        {
-          "type": "str",
           "named": true
         },
         {
@@ -805,11 +793,11 @@
           "named": true
         },
         {
-          "type": "uident",
+          "type": "type_decl",
           "named": true
         },
         {
-          "type": "union_body",
+          "type": "uident",
           "named": true
         }
       ]
@@ -1155,25 +1143,6 @@
       "types": [
         {
           "type": "expr",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "opt_type_params",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "lident",
-          "named": true
-        },
-        {
-          "type": "opt_type_params",
           "named": true
         }
       ]
@@ -1784,6 +1753,33 @@
     }
   },
   {
+    "type": "type_decl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "effect_body",
+          "named": true
+        },
+        {
+          "type": "str",
+          "named": true
+        },
+        {
+          "type": "struct_body",
+          "named": true
+        },
+        {
+          "type": "union_body",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "union_body",
     "named": true,
     "fields": {},
@@ -2043,10 +2039,6 @@
   },
   {
     "type": "@Array",
-    "named": false
-  },
-  {
-    "type": "@alias",
     "named": false
   },
   {

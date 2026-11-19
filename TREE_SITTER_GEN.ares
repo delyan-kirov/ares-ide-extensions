@@ -137,13 +137,13 @@ $ conflicts : @Vec { @Str, @Str } = []
 
 # ---- reading the spec -------------------------------------------------------
 
-$ Prec : @struct = name: @Str, level: @Int, assoc: @Str,
+$ Prec : @Type = @struct name: @Str, level: @Int, assoc: @Str,
 
-$ Header : @struct = terms: @Vec @Str, precs: @Vec Prec,
+$ Header : @Type = @struct terms: @Vec @Str, precs: @Vec Prec,
 
-$ Alt : @struct = syms: @Vec @Str, prec: @Str,
+$ Alt : @Type = @struct syms: @Vec @Str, prec: @Str,
 
-$ Rule : @struct = name: @Str, alts: @Vec Alt,
+$ Rule : @Type = @struct name: @Str, alts: @Vec Alt,
 
 # The declarations before the first `%%` and the rules up to the second.
 $ sections : @Str -> { @Str, @Str } = \s =>
@@ -259,7 +259,7 @@ $ nullable_set : @Vec Rule -> @Vec @Str -> @Vec @Str = \rules known =>
     in
     if len next == len known => known else nullable_set rules next
 
-$ Ctx : @struct = terms: @Vec @Str, nullable: @Vec @Str, precs: @Vec Prec,
+$ Ctx : @Type = @struct terms: @Vec @Str, nullable: @Vec @Str, precs: @Vec Prec,
 
 $ find_prec : Ctx -> @Str -> Opt Prec = \c name => find (\p => p.name == name) c.precs
 

@@ -19,7 +19,6 @@
 ; capitalised (`@Int`) and an intrinsic otherwise (`@vec_len`), and a
 ; capitalised name heading an atom is a type (or the module of a qualified
 ; name); the constructor after its `.` is matched below.
-(opt_type_params (lident) @type.parameter)
 ((plain (at_tycon) @type.builtin) (#match? @type.builtin "^@[A-Z]"))
 (plain (uident) @type)
 (eff_entry (uident) @type)
@@ -46,7 +45,7 @@
 ["let" "in"] @keyword
 ["if" "else"] @keyword.control.conditional
 ["do" "ctl"] @keyword.control
-["@mod" "@struct" "@union" "@alias" "@effect" "@main" "@build" "&" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword.directive
+["@mod" "@struct" "@union" "@effect" "@main" "@build" "&" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword.directive
 "$" @punctuation.special
 
 ["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "~" "&&" "||" "!" "..." "<>" "\\"] @operator
