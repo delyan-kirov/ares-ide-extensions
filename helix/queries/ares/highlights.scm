@@ -6,7 +6,7 @@
 (str) @string
 (int) @constant.numeric.integer
 [(real) (imag)] @constant.numeric.float
-["@true" "@false"] @constant.builtin.boolean
+((lident) @constant.builtin.boolean (#any-of? @constant.builtin.boolean "true" "false"))
 (hole) @special
 
 ; What an item defines: the name after `$`.
@@ -44,11 +44,11 @@
 
 ["let" "in"] @keyword
 ["if" "else"] @keyword.control.conditional
-["do" "ctl"] @keyword.control
-["@mod" "@struct" "@union" "@effect" "@main" "@build" "&" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword.directive
+["do" "is"] @keyword.control
+["@mod" "@struct" "@union" "@effect" "@main" "@build" "!" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword.directive
 "$" @punctuation.special
 
-["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "~" "&&" "||" "!" "..." "<>" "\\"] @operator
+["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "~" "&&" "||" "..." "<>" "\\"] @operator
 ["(" ")" "[" "]" "{" "}"] @punctuation.bracket
 ["," "."] @punctuation.delimiter
 

@@ -47,7 +47,7 @@
           }
         },
         {
-          "match": "^(\\$)\\s*(@main|@build|@private|&)\\b",
+          "match": "^(\\$)\\s*(@main|@build|@private|!)",
           "captures": {
             "1": { "name": "punctuation.definition.item.ares" },
             "2": { "name": "keyword.other.directive.ares" }
@@ -172,11 +172,11 @@
     "at": {
       "patterns": [
         {
-          "match": "@(true|false)\\b",
+          "match": "\\b(true|false)\\b",
           "name": "constant.language.boolean.ares"
         },
         {
-          "match": "@(int|nat|int8|int16|int32|int64|nat8|nat16|nat32|nat64|float32|float64|str|ptr|bool|array|vec|token|code|future|chan|tvar)\\b",
+          "match": "@(int|nat|int8|int16|int32|int64|nat8|nat16|nat32|nat64|float32|float64|str|ptr|array|vec|token|code|future|chan|tvar)\\b",
           "name": "support.type.builtin.ares"
         },
         {
@@ -208,7 +208,7 @@
           "name": "keyword.control.conditional.ares"
         },
         {
-          "match": "\\b(let|in|do|ctl)\\b",
+          "match": "\\b(let|in|do|is)\\b",
           "name": "keyword.control.ares"
         }
       ]

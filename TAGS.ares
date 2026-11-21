@@ -33,22 +33,22 @@ $ @import ARESxSTR
 
 # A token, the line it is on and where that line starts. `item` marks a `$`
 # at the start of a line, which begins an item.
-$ Tok : @Type = @struct text: @Str, line: @Int, bol: @Int, item: @Bool,
+$ Tok : @Type = @struct text: @Str, line: @Int, bol: @Int, item: Bool,
 
-$ Tag : @Type = @struct name: @Str, line: @Int, text: @Str, kind: @Str, scope: @Str, private: @Bool,
+$ Tag : @Type = @struct name: @Str, line: @Int, text: @Str, kind: @Str, scope: @Str, private: Bool,
 
 # ---- scanning ---------------------------------------------------------------
 
 # The byte at `i`, or 0 past the end.
 $ byte : @Str -> @Int -> @Int = \s i => if i < @array_len s => @array_get s i else 0
 
-$ is_word_start : @Int -> @Bool = \c => ARES.is_alpha c || c == 95 || c == 64
+$ is_word_start : @Int -> Bool = \c => ARES.is_alpha c || c == 95 || c == 64
 
-$ is_word : @Int -> @Bool = \c => ARES.is_alnum c || c == 95
+$ is_word : @Int -> Bool = \c => ARES.is_alnum c || c == 95
 
 # The operator characters of crates/frontend/src/lexer/data.rs: a run of them
 # is one token, so `::` is never mistaken for `:`.
-$ is_op : @Int -> @Bool = \c =>
+$ is_op : @Int -> Bool = \c =>
     c == 33
         || c == 36
         || c == 37
@@ -67,7 +67,7 @@ $ is_op : @Int -> @Bool = \c =>
         || c == 126
         || c == 92
 
-$ run_end : (@Int -> @Bool) -> @Str -> @Int -> @Int = \p s i =>
+$ run_end : (@Int -> Bool) -> @Str -> @Int -> @Int = \p s i =>
     if i < @array_len s && p (@array_get s i) => run_end p s (i + 1) else i
 
 # A `#- ... -#` block comment nests. `Pos` is an offset, its line and where
@@ -160,16 +160,17 @@ $ token : @Str -> @Int -> @Int -> @Int -> @Int -> Tok = \s i j line bol =>
 
 # The text of the `k`th token of the current item, or "" past its end.
 $ peek : List Tok -> @Int -> @Str = \ts k =>
-    ts |>
-        \ | List.Cons.{ t, rest } if !t.item => if k == 0 => t.text else peek rest (k - 1) | _ => ""
+    ts |> \
+        | List.Cons.{ t, rest } if not t.item => if k == 0 => t.text else peek rest (k - 1)
+        | _                                   => ""
 
 $ drop : @Int -> List Tok -> List Tok = \k ts =>
     ts |> \ | List.Cons.{ t, rest } if k > 0 => drop (k - 1) rest | _ => ts
 
-$ is_lower_name : @Str -> @Bool = \s =>
-    !(is_empty s) && (ARES.is_lower (@array_get s 0) || @array_get s 0 == 95)
+$ is_lower_name : @Str -> Bool = \s =>
+    not (is_empty s) && (ARES.is_lower (@array_get s 0) || @array_get s 0 == 95)
 
-$ is_upper_name : @Str -> @Bool = \s => !(is_empty s) && ARES.is_upper (@array_get s 0)
+$ is_upper_name : @Str -> Bool = \s => not (is_empty s) && ARES.is_upper (@array_get s 0)
 
 $ type_kind : @Str -> @Str = \d =>
     d |> \
@@ -191,7 +192,7 @@ $ scope_name : @Str -> @Str = \k =>
         | "u" => "union"
         | _   => "effect"
 
-$ St : @Type = @struct src: @Str, module: @Str, private: @Bool, tags: List Tag,
+$ St : @Type = @struct src: @Str, module: @Str, private: Bool, tags: List Tag,
 
 # The source line a token is on.
 $ line_text : @Str -> Tok -> @Str = \s t => ARES.substr t.bol (run_end (\b => b != 10) s t.bol) s
@@ -221,7 +222,7 @@ $ item : Tok -> List Tok -> St -> St = \dollar ts st =>
         tag St.{ .src = st.src, .module = name, .private = st.private, .tags = st.tags } name dollar
             "n" ""
     else if head == "@private" =>
-        St.{ .src = st.src, .module = st.module, .private = @true, .tags = st.tags }
+        St.{ .src = st.src, .module = st.module, .private = true, .tags = st.tags }
     else if head == "(" =>
         tag st (operator (drop 1 ts) "") dollar "f" ""
     else if is_lower_name head =>
@@ -232,7 +233,7 @@ $ item : Tok -> List Tok -> St -> St = \dollar ts st =>
         if kind == "" =>
             tag st head dollar "t" ""
         else
-            members (after_extern (drop 1 body)) 0 @true kind head (tag st head dollar kind "")
+            members (after_extern (drop 1 body)) 0 true kind head (tag st head dollar kind "")
     else
         st
 
@@ -247,22 +248,21 @@ $ after_extern : List Tok -> List Tok = \ts => if peek ts 0 == "@extern" => drop
 
 # A member is a name followed by `:` at the top level of the body, first or
 # after a comma.
-$ members : List Tok -> @Int -> @Bool -> @Str -> @Str -> St
-    -> St = \ts depth expect kind owner st =>
+$ members : List Tok -> @Int -> Bool -> @Str -> @Str -> St -> St = \ts depth expect kind owner st =>
     ts |> \
-        | List.Cons.{ t, rest } if !t.item =>
+        | List.Cons.{ t, rest } if not t.item =>
             let s = t.text in
             let next = \d e st2 => members rest d e kind owner st2 in
             if s == "(" || s == "\{" || s == "[" =>
-                next (depth + 1) @false st
+                next (depth + 1) false st
             else if s == ")" || s == "}" || s == "]" =>
-                next (depth - 1) @false st
+                next (depth - 1) false st
             else if depth == 0 && s == "," =>
-                next 0 @true st
+                next 0 true st
             else if depth == 0 && expect && ARES.is_alpha (@array_get s 0) && peek rest 0 == ":" =>
-                next 0 @false (tag st s t (member_kind kind) (scope_name kind ++ ":" ++ owner))
+                next 0 false (tag st s t (member_kind kind) (scope_name kind ++ ":" ++ owner))
             else
-                next depth @false st
+                next depth false st
         | _ => st
 
 # ---- writing ----------------------------------------------------------------
@@ -292,7 +292,7 @@ $ entries : @Str -> @Str -> List @Str -> Tag -> List @Str = \file module acc t =
     let owner =
         ARES.index_of ":" t.scope |> \
             | Opt.Some.{ c } => ARES.substr (c + 1) (@array_len t.scope) t.scope
-            | _                 => if t.private || t.kind == "n" || module == "" => "" else module
+            | _              => if t.private || t.kind == "n" || module == "" => "" else module
     in
     if owner == "" => plain :: acc else entry file pat (owner ++ "." ++ t.name) t :: plain :: acc
 
@@ -300,7 +300,7 @@ $ file_entries : List @Str -> @Str -> <@IO> List @Str = \acc file =>
     ARES.read_file file |> \
         | Opt.Some.{ src } =>
             let st = items (lex src)
-                St.{ .src = src, .module = "", .private = @false, .tags = List.Nil } in
+                St.{ .src = src, .module = "", .private = false, .tags = List.Nil } in
             foldl (entries file st.module) acc st.tags
         | _ => ARES.eprintln ("TAGS: cannot read " ++ file); acc
 
@@ -347,7 +347,8 @@ $ read_lines : @Int -> @Str -> List @Str -> <@IO> List @Str = \f line acc =>
     else
         line :: acc
 
-$ drop_dot : @Str -> @Str = \p => if ARES.starts_with "./" p => ARES.substr 2 (@array_len p) p else p
+$ drop_dot : @Str -> @Str = \p =>
+    if ARES.starts_with "./" p => ARES.substr 2 (@array_len p) p else p
 
 $ sources : List @Str -> @Str -> <@IO> List @Str = \acc path =>
     if ARES.ends_with ".ares" path =>
@@ -365,7 +366,8 @@ $ header : @Str =
         ++ "!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted, 2=foldcase/\n"
         ++ "!_TAG_PROGRAM_NAME\tares TAGS.ares\t//\n"
 
-$ fold_io : @ctx {a: @Type, b: @Type} -> (a -> b -> <@IO> a) -> a -> List b -> <@IO> a = \f acc xs =>
+$ fold_io : @ctx { a: @Type, b: @Type } -> (a -> b -> <@IO> a) -> a -> List b
+    -> <@IO> a = \f acc xs =>
     xs |> \ | List.Cons.{ x, rest } => fold_io f (f acc x) rest | _ => acc
 
 $ write_lines : @Int -> List @Str -> <@IO> {} = \f xs =>
