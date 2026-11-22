@@ -123,7 +123,6 @@ module.exports = grammar({
     ),
     op_decl: $ => seq($.lident, ':', $.expr),
     opt_comma: $ => ',',
-    use_param: $ => seq('@use', '{', $.use_fields, optional($.opt_comma), '}'),
     ctx_param: $ => choice(
       seq('@ctx', '{', $.use_fields, optional($.opt_comma), '}'),
       seq('@ctx', '{', $.use_fields, 'if', $.expr, '}'),
@@ -165,8 +164,6 @@ module.exports = grammar({
       prec.left(3, seq($.op_expr, '|>', $.ctrl_expr)),
       seq($.op_expr, '->', $.expr),
       seq($.op_expr, '->', $.eff_row, $.expr),
-      seq($.use_param, '->', $.expr),
-      seq($.use_param, '->', $.eff_row, $.expr),
       seq($.ctx_param, '->', $.expr),
     ),
     ctrl_expr: $ => choice(
@@ -259,7 +256,6 @@ module.exports = grammar({
       seq('(', $.expr, ')'),
       seq('(', $.operator_name, ')'),
       seq('(', $.expr, ':', $.expr, ')'),
-      seq('@use', '{', $.use_inits, optional($.opt_comma), '}'),
       seq('@ctx', '{', $.use_inits, optional($.opt_comma), '}'),
       '_',
       $.seq_lit,

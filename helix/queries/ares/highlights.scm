@@ -45,7 +45,7 @@
 ["let" "in"] @keyword
 ["if" "else"] @keyword.control.conditional
 ["do" "is"] @keyword.control
-["@mod" "@struct" "@union" "@main" "@build" "!" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword.directive
+["@mod" "@struct" "@union" "@main" "@build" "!" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword.directive
 "$" @punctuation.special
 
 ["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "~" "&&" "||" "..." "<>" "\\"] @operator
