@@ -176,7 +176,6 @@ $ type_kind : @Str -> @Str = \d =>
     d |> \
         | "@struct" => "s"
         | "@union"  => "u"
-        | "@effect" => "e"
         | _         => ""
 
 $ member_kind : @Str -> @Str = \k =>
@@ -229,11 +228,13 @@ $ item : Tok -> List Tok -> St -> St = \dollar ts st =>
         tag st head dollar "f" ""
     else if is_upper_name head && peek ts 1 == ":" =>
         let body = after_eq (drop 2 ts) in
-        let kind = type_kind (peek body 0) in
+        let effect = before_eq (drop 2 ts) "" == "@Effect" in
+        let kind = if effect => "e" else type_kind (peek body 0) in
+        let fields = if effect => body else after_extern (drop 1 body) in
         if kind == "" =>
             tag st head dollar "t" ""
         else
-            members (after_extern (drop 1 body)) 0 true kind head (tag st head dollar kind "")
+            members fields 0 true kind head (tag st head dollar kind "")
     else
         st
 
@@ -242,6 +243,10 @@ $ operator : List Tok -> @Str -> @Str = \ts acc =>
 
 $ after_eq : List Tok -> List Tok = \ts =>
     let s = peek ts 0 in if s == "" => ts else if s == "=" => drop 1 ts else after_eq (drop 1 ts)
+
+# The last token before `=`: a signature ending in `@Effect` declares an effect.
+$ before_eq : List Tok -> @Str -> @Str = \ts last =>
+    let s = peek ts 0 in if s == "" || s == "=" => last else before_eq (drop 1 ts) s
 
 # The members of a C-layout type follow its `@extern "abi"`.
 $ after_extern : List Tok -> List Tok = \ts => if peek ts 0 == "@extern" => drop 2 ts else ts

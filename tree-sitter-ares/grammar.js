@@ -15,6 +15,7 @@ module.exports = grammar({
       seq('$', $.lident, optional($.opt_sig), '=', $.body),
       seq('$', $.uident, ':', $.expr, '=', $.expr),
       seq('$', $.uident, ':', $.expr, '=', $.type_decl),
+      seq('$', $.uident, ':', $.expr, '=', $.effect_body),
       seq('$', '@import', $.import),
       seq('$', '@private'),
       seq('$', '@main', ':', $.expr, '=', $.expr),
@@ -75,7 +76,6 @@ module.exports = grammar({
       seq('@union', $.union_body),
       '@union',
       seq('@union', '@extern', $.str, $.struct_body),
-      seq('@effect', $.effect_body),
     ),
     struct_body: $ => seq($.field_decls, optional($.opt_comma)),
     field_decls: $ => choice(
@@ -124,7 +124,10 @@ module.exports = grammar({
     op_decl: $ => seq($.lident, ':', $.expr),
     opt_comma: $ => ',',
     use_param: $ => seq('@use', '{', $.use_fields, optional($.opt_comma), '}'),
-    ctx_param: $ => seq('@ctx', '{', $.use_fields, optional($.opt_comma), '}'),
+    ctx_param: $ => choice(
+      seq('@ctx', '{', $.use_fields, optional($.opt_comma), '}'),
+      seq('@ctx', '{', $.use_fields, 'if', $.expr, '}'),
+    ),
     use_fields: $ => choice(
       seq($.lident, ':', $.expr),
       seq($.use_fields, ',', $.lident, ':', $.expr),

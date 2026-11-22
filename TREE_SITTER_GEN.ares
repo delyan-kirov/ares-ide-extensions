@@ -44,7 +44,6 @@ $ tokens : @Vec { @Str, @Str } = [
     { "AT_STRUCT", "'@struct'" },
     { "AT_UNION", "'@union'" },
     { "AT_ALIAS", "'@alias'" },
-    { "AT_EFFECT", "'@effect'" },
     { "AT_MAIN", "'@main'" },
     { "AT_BUILD", "'@build'" },
     { "AT_USE", "'@use'" },

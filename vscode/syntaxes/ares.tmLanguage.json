@@ -24,7 +24,7 @@
           }
         },
         {
-          "match": "^(\\$)\\s*([A-Z][A-Za-z0-9_]*|@I[A-Z][A-Za-z0-9_]*)\\s*(:)\\s*(@struct|@union|@alias|@effect)\\b",
+          "match": "^(\\$)\\s*([A-Z][A-Za-z0-9_]*|@I[A-Z][A-Za-z0-9_]*)\\s*(:)\\s*(@struct|@union|@alias)\\b",
           "captures": {
             "1": { "name": "punctuation.definition.item.ares" },
             "2": { "name": "entity.name.type.ares" },
@@ -188,7 +188,7 @@
           "name": "support.type.interface.ares"
         },
         {
-          "match": "@(mod|struct|union|alias|effect)\\b",
+          "match": "@(mod|struct|union|alias)\\b",
           "name": "storage.type.ares"
         },
         {

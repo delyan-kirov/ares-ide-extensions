@@ -45,7 +45,7 @@
 ["let" "in"] @keyword
 ["if" "else"] @keyword
 ["do" "is"] @keyword
-["@mod" "@struct" "@union" "@effect" "@main" "@build" "!" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword
+["@mod" "@struct" "@union" "@main" "@build" "!" "@use" "@ctx" "@private" "@import" "@extern" "@Array"] @keyword
 "$" @punctuation.special
 
 ["=" "=>" "->" ":" "|" ";" "|>" "<|" "<|>" "::" "++" "+" "-" "*" "/" "%" "^" "==" "!=" "<" ">" "<=" ">=" "~" "&&" "||" "..." "<>" "\\"] @operator

@@ -364,6 +364,10 @@
       "required": true,
       "types": [
         {
+          "type": "expr",
+          "named": true
+        },
+        {
           "type": "opt_comma",
           "named": true
         },
@@ -762,6 +766,10 @@
         },
         {
           "type": "builtin_lit",
+          "named": true
+        },
+        {
+          "type": "effect_body",
           "named": true
         },
         {
@@ -1765,10 +1773,6 @@
       "required": false,
       "types": [
         {
-          "type": "effect_body",
-          "named": true
-        },
-        {
           "type": "str",
           "named": true
         },
@@ -2047,10 +2051,6 @@
   },
   {
     "type": "@ctx",
-    "named": false
-  },
-  {
-    "type": "@effect",
     "named": false
   },
   {
