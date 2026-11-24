@@ -1272,39 +1272,6 @@
       "type": "STRING",
       "value": ","
     },
-    "use_param": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "@use"
-        },
-        {
-          "type": "STRING",
-          "value": "{"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "use_fields"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "opt_comma"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "}"
-        }
-      ]
-    },
     "ctx_param": {
       "type": "CHOICE",
       "members": [
@@ -1481,27 +1448,6 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "lident"
-              },
-              {
-                "type": "STRING",
-                "value": ">"
-              }
-            ]
-          }
-        },
-        {
-          "type": "PREC_LEFT",
-          "value": 6,
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "<"
-              },
-              {
-                "type": "SYMBOL",
                 "name": "eff_names"
               },
               {
@@ -1595,6 +1541,10 @@
         {
           "type": "SYMBOL",
           "name": "eff_entry"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "lident"
         },
         {
           "type": "SYMBOL",
@@ -1725,44 +1675,6 @@
             {
               "type": "SYMBOL",
               "name": "op_expr"
-            },
-            {
-              "type": "STRING",
-              "value": "->"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "eff_row"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "expr"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "use_param"
-            },
-            {
-              "type": "STRING",
-              "value": "->"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "expr"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "use_param"
             },
             {
               "type": "STRING",
@@ -2928,39 +2840,6 @@
             {
               "type": "STRING",
               "value": ")"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "@use"
-            },
-            {
-              "type": "STRING",
-              "value": "{"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "use_inits"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "opt_comma"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            },
-            {
-              "type": "STRING",
-              "value": "}"
             }
           ]
         },

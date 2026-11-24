@@ -138,7 +138,6 @@ module.exports = grammar({
     rec_field: $ => seq($.lident, ':', $.expr),
     eff_row: $ => choice(
       '<>',
-      prec.left(6, seq('<', $.lident, '>')),
       prec.left(6, seq('<', $.eff_names, '>')),
       prec.left(6, seq('<', $.eff_names, '|', $.lident, '>')),
       prec.left(6, seq('<|', $.lident, '>')),
@@ -149,6 +148,7 @@ module.exports = grammar({
     ),
     row_entry: $ => choice(
       $.eff_entry,
+      $.lident,
       $.splice,
     ),
     eff_entry: $ => choice(

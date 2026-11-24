@@ -580,10 +580,6 @@
         {
           "type": "op_expr",
           "named": true
-        },
-        {
-          "type": "use_param",
-          "named": true
         }
       ]
     }
@@ -1678,6 +1674,10 @@
           "named": true
         },
         {
+          "type": "lident",
+          "named": true
+        },
+        {
           "type": "splice",
           "named": true
         }
@@ -1847,25 +1847,6 @@
         },
         {
           "type": "use_inits",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "use_param",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "opt_comma",
-          "named": true
-        },
-        {
-          "type": "use_fields",
           "named": true
         }
       ]
@@ -2079,10 +2060,6 @@
   },
   {
     "type": "@union",
-    "named": false
-  },
-  {
-    "type": "@use",
     "named": false
   },
   {
