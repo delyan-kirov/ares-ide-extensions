@@ -26,10 +26,10 @@
 (at_iface) @type
 
 ; Fields and parameters
-(field_decl (lident) @property)
+(names (lident) @property)
 (dot_inits (lident) @property)
 (field_init (lident) @property)
-(rec_field (lident) @property)
+(rec_field (app) @property)
 (postfix (lident) @property)
 (param (pat_plain (lident) @variable))
 

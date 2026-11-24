@@ -254,7 +254,7 @@ $ nullable_set : @Vec Rule -> @Vec @Str -> @Vec @Str = \rules known =>
     in
     if len next == len known => known else nullable_set rules next
 
-$ Ctx : @Type = @struct terms: @Vec @Str, nullable: @Vec @Str, precs: @Vec Prec,
+$ Ctx : @Type = @struct terms nullable: @Vec @Str, precs: @Vec Prec,
 
 $ find_prec : Ctx -> @Str -> Opt Prec = \c name => find (\p => p.name == name) c.precs
 

@@ -83,7 +83,7 @@ module.exports = grammar({
       seq($.field_decls, ',', $.field_decl),
     ),
     field_decl: $ => choice(
-      seq($.lident, ':', $.expr),
+      seq($.names, ':', $.expr),
       $.entry_splice,
     ),
     union_body: $ => seq($.variant_decls, optional($.opt_comma)),
@@ -114,28 +114,32 @@ module.exports = grammar({
     ),
     payload_field: $ => choice(
       $.expr,
-      seq($.lident, ':', $.expr),
+      seq($.app, ':', $.expr),
     ),
     effect_body: $ => seq($.op_decls, optional($.opt_comma)),
     op_decls: $ => choice(
       $.op_decl,
       seq($.op_decls, ',', $.op_decl),
     ),
-    op_decl: $ => seq($.lident, ':', $.expr),
+    op_decl: $ => seq($.app, ':', $.expr),
     opt_comma: $ => ',',
     ctx_param: $ => choice(
       seq('@ctx', '{', $.use_fields, optional($.opt_comma), '}'),
       seq('@ctx', '{', $.use_fields, 'if', $.expr, '}'),
     ),
     use_fields: $ => choice(
-      seq($.lident, ':', $.expr),
-      seq($.use_fields, ',', $.lident, ':', $.expr),
+      seq($.names, ':', $.expr),
+      seq($.use_fields, ',', $.names, ':', $.expr),
     ),
     rec_field_list: $ => choice(
       $.rec_field,
       seq($.rec_field_list, ',', $.rec_field),
     ),
-    rec_field: $ => seq($.lident, ':', $.expr),
+    rec_field: $ => seq($.app, ':', $.expr),
+    names: $ => choice(
+      $.lident,
+      seq($.names, $.lident),
+    ),
     eff_row: $ => choice(
       '<>',
       prec.left(6, seq('<', $.eff_names, '>')),

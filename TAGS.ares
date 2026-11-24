@@ -33,9 +33,9 @@ $ @import ARESxSTR
 
 # A token, the line it is on and where that line starts. `item` marks a `$`
 # at the start of a line, which begins an item.
-$ Tok : @Type = @struct text: @Str, line: @Int, bol: @Int, item: Bool,
+$ Tok : @Type = @struct text: @Str, line bol: @Int, item: Bool,
 
-$ Tag : @Type = @struct name: @Str, line: @Int, text: @Str, kind: @Str, scope: @Str, private: Bool,
+$ Tag : @Type = @struct name: @Str, line: @Int, text kind scope: @Str, private: Bool,
 
 # ---- scanning ---------------------------------------------------------------
 
@@ -72,7 +72,7 @@ $ run_end : (@Int -> Bool) -> @Str -> @Int -> @Int = \p s i =>
 
 # A `#- ... -#` block comment nests. `Pos` is an offset, its line and where
 # that line starts.
-$ Pos : @Type = @struct at: @Int, line: @Int, bol: @Int,
+$ Pos : @Type = @struct at line bol: @Int,
 
 $ block_end : @Str -> Pos -> @Int -> Pos = \s p depth =>
     let i = p.at in
@@ -191,7 +191,7 @@ $ scope_name : @Str -> @Str = \k =>
         | "u" => "union"
         | _   => "effect"
 
-$ St : @Type = @struct src: @Str, module: @Str, private: Bool, tags: List Tag,
+$ St : @Type = @struct src module: @Str, private: Bool, tags: List Tag,
 
 # The source line a token is on.
 $ line_text : @Str -> Tok -> @Str = \s t => ARES.substr t.bol (run_end (\b => b != 10) s t.bol) s
@@ -371,8 +371,7 @@ $ header : @Str =
         ++ "!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted, 2=foldcase/\n"
         ++ "!_TAG_PROGRAM_NAME\tares TAGS.ares\t//\n"
 
-$ fold_io : @ctx { a: @Type, b: @Type } -> (a -> b -> <@IO> a) -> a -> List b
-    -> <@IO> a = \f acc xs =>
+$ fold_io : @ctx { a b: @Type } -> (a -> b -> <@IO> a) -> a -> List b -> <@IO> a = \f acc xs =>
     xs |> \ | List.Cons.{ x, rest } => fold_io f (f acc x) rest | _ => acc
 
 $ write_lines : @Int -> List @Str -> <@IO> {} = \f xs =>

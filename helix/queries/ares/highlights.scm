@@ -26,10 +26,10 @@
 (at_iface) @type.builtin
 
 ; Fields and parameters
-(field_decl (lident) @variable.other.member)
+(names (lident) @variable.other.member)
 (dot_inits (lident) @variable.other.member)
 (field_init (lident) @variable.other.member)
-(rec_field (lident) @variable.other.member)
+(rec_field (app) @variable.other.member)
 (postfix (lident) @variable.other.member)
 (param (pat_plain (lident) @variable.parameter))
 
